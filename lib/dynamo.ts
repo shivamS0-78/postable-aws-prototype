@@ -1,4 +1,4 @@
-import { PutCommand, GetCommand, ScanCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb"
+import { PutCommand, GetCommand, ScanCommand, UpdateCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb"
 import { dynamoDocClient } from "./aws"
 
 const TABLE = process.env.DYNAMODB_TABLE_NAME || "clipflow-videos"
@@ -42,5 +42,12 @@ export async function updateVideo(id: string, updates: any) {
     UpdateExpression: `SET ${updateExpressions.join(", ")}`,
     ExpressionAttributeValues: expressionValues,
     ExpressionAttributeNames: expressionNames
+  }))
+}
+
+export async function deleteVideo(id: string) {
+  await dynamoDocClient.send(new DeleteCommand({
+    TableName: TABLE,
+    Key: { id }
   }))
 }
