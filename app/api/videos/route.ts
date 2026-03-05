@@ -28,10 +28,10 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
+  // delete the console.log block
   try {
     const videos = await getAllVideos()
-    // Sort by createdAt descending
-    videos.sort((a: any, b: any) => 
+    videos.sort((a: any, b: any) =>
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )
     return NextResponse.json({ videos })
