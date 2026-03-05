@@ -49,17 +49,18 @@ function generateAnalytics(viralScore: number) {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const video = await getVideo(params.id)
+    const { id } = await params
+    const video = await getVideo(id)
     if (!video) return NextResponse.json({ error: "Not found" }, { status: 404 })
 
     let analytics = video.analyticsData ? JSON.parse(video.analyticsData) : null
 
     if (!analytics && video.status === "ready") {
       analytics = generateAnalytics(video.viralScore || 50)
-      await updateVideo(params.id, { 
+      await updateVideo(id, {
         analyticsData: JSON.stringify(analytics),
         status: "published"
       })

@@ -31,18 +31,19 @@ Analyze and return trending opportunities. Respond ONLY in this exact JSON forma
 Generate 5 realistic trending topics with growth scores from 1-100.`
 
     const response = await bedrockClient.send(new InvokeModelCommand({
-      modelId: process.env.BEDROCK_MODEL_ID || "anthropic.claude-3-haiku-20240307-v1:0",
+      modelId: process.env.BEDROCK_MODEL_ID || "amazon.nova-pro-v1:0",
       contentType: "application/json",
       accept: "application/json",
       body: JSON.stringify({
-        anthropic_version: "bedrock-2023-05-31",
-        max_tokens: 1500,
-        messages: [{ role: "user", content: prompt }]
+        messages: [{
+          role: "user",
+          content: [{ text: prompt }]
+        }]
       })
     }))
 
     const result = JSON.parse(Buffer.from(response.body).toString())
-    const text = result.content[0].text
+    const text = result.output.message.content[0].text
     const jsonMatch = text.match(/\{[\s\S]*\}/)
     const trends = jsonMatch ? JSON.parse(jsonMatch[0]) : null
 
