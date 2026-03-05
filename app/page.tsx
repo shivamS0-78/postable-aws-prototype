@@ -78,18 +78,26 @@ export default function Dashboard() {
               Powered by AWS Bedrock
             </span>
           </div>
-          <button
-            onClick={() => router.push("/trends")}
-            className="text-gray-300 hover:text-white border border-gray-700 hover:border-gray-500 px-4 py-2 rounded-lg text-sm transition-colors"
-          >
-            🔥 Trends
-          </button>
-          <button
-            onClick={() => router.push("/upload")}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-          >
-            + Upload Video
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => router.push("/trends")}
+              className="text-gray-300 hover:text-white border border-gray-700 hover:border-gray-500 px-4 py-2 rounded-lg text-sm transition-colors"
+            >
+              🔥 Trends
+            </button>
+            <button
+              onClick={() => router.push("/settings")}
+              className="text-gray-300 hover:text-white border border-gray-700 hover:border-gray-500 px-4 py-2 rounded-lg text-sm transition-colors"
+            >
+              ⚙️ Settings
+            </button>
+            <button
+              onClick={() => router.push("/upload")}
+              className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+            >
+              + Upload Video
+            </button>
+          </div>
         </div>
       </div>
 
@@ -151,7 +159,7 @@ export default function Dashboard() {
                       {video.viralScore && (
                         <div className="text-center">
                           <div className={`text-lg font-bold ${video.viralScore >= 70 ? "text-green-400" :
-                              video.viralScore >= 40 ? "text-yellow-400" : "text-red-400"
+                            video.viralScore >= 40 ? "text-yellow-400" : "text-red-400"
                             }`}>
                             {video.viralScore}
                           </div>

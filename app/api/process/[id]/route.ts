@@ -9,31 +9,28 @@ import { getVideo, updateVideo } from "@/lib/dynamo"
 async function waitForTranscription(jobName: string): Promise<string> {
   for (let i = 0; i < 60; i++) {
     await new Promise(r => setTimeout(r, 5000))
-    
+
     const result = await transcribeClient.send(
       new GetTranscriptionJobCommand({ TranscriptionJobName: jobName })
     )
-    
+
     const status = result.TranscriptionJob?.TranscriptionJobStatus
-    
+
     if (status === "COMPLETED") {
       const transcriptUri = result.TranscriptionJob?.Transcript?.TranscriptFileUri
       if (!transcriptUri) throw new Error("No transcript URI")
-      
-      const url = new URL(transcriptUri)
-      const key = url.pathname.substring(1).split("/").slice(1).join("/")
-      
-      const s3Response = await s3Client.send(new GetObjectCommand({
-        Bucket: process.env.S3_BUCKET_NAME!,
-        Key: key
-      }))
-      
-      const body = await s3Response.Body?.transformToString()
-      const transcriptData = JSON.parse(body || "{}")
+
+      // Fetch transcript from the Transcribe-provided URL
+      const transcriptRes = await fetch(transcriptUri)
+      const transcriptData = await transcriptRes.json()
       return transcriptData.results?.transcripts?.[0]?.transcript || ""
     }
-    
-    if (status === "FAILED") throw new Error("Transcription failed")
+
+    if (status === "FAILED") {
+      const reason = result.TranscriptionJob?.FailureReason || "Unknown reason"
+      console.error("Transcription failed:", reason)
+      throw new Error(`Transcription failed: ${reason}`)
+    }
   }
   throw new Error("Transcription timeout")
 }
@@ -41,7 +38,7 @@ async function waitForTranscription(jobName: string): Promise<string> {
 // Helper: call Nova Pro on Bedrock
 async function callNova(prompt: string): Promise<string> {
   const response = await bedrockClient.send(new InvokeModelCommand({
-    modelId: process.env.BEDROCK_MODEL_ID || "eu.amazon.nova-pro-v1:0",
+    modelId: process.env.BEDROCK_MODEL_ID || "amazon.nova-pro-v1:0",
     contentType: "application/json",
     accept: "application/json",
     body: JSON.stringify({
@@ -51,7 +48,7 @@ async function callNova(prompt: string): Promise<string> {
       }]
     })
   }))
-  
+
   const result = JSON.parse(Buffer.from(response.body).toString())
   return result.output.message.content[0].text
 }
@@ -72,16 +69,13 @@ export async function POST(
 
     // 3. Start transcription
     const jobName = `clipflow-${videoId}-${Date.now()}`
-    
+
     await transcribeClient.send(new StartTranscriptionJobCommand({
       TranscriptionJobName: jobName,
-      Media: { 
-        MediaFileUri: `s3://${process.env.S3_BUCKET_NAME}/${video.s3Key}` 
+      Media: {
+        MediaFileUri: `s3://${process.env.S3_BUCKET_NAME}/${video.s3Key}`
       },
-      MediaFormat: video.s3Key.split(".").pop() as any || "mp4",
       LanguageCode: "en-US",
-      OutputBucketName: process.env.S3_BUCKET_NAME!,
-      OutputKey: `transcripts/${videoId}.json`
     }))
 
     // 4. Wait for transcription
@@ -135,7 +129,7 @@ Generate optimized content for each platform. Return ONLY a valid JSON object wi
 }`
 
     const aiResponse = await callNova(prompt)
-    
+
     // 6. Parse AI response
     let aiContent
     try {
@@ -146,7 +140,7 @@ Generate optimized content for each platform. Return ONLY a valid JSON object wi
     }
 
     if (!aiContent) {
-      await updateVideo(videoId, { 
+      await updateVideo(videoId, {
         status: "ready",
         transcript: transcript.slice(0, 5000),
         error: "AI parsing failed, using defaults"
@@ -174,9 +168,9 @@ Generate optimized content for each platform. Return ONLY a valid JSON object wi
 
   } catch (error: any) {
     console.error("Processing error:", error)
-    await updateVideo(videoId, { 
-      status: "error", 
-      error: error.message 
+    await updateVideo(videoId, {
+      status: "error",
+      error: error.message
     })
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
