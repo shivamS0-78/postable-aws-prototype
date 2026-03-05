@@ -1,0 +1,183 @@
+import { NextRequest, NextResponse } from "next/server"
+import { StartTranscriptionJobCommand, GetTranscriptionJobCommand } from "@aws-sdk/client-transcribe"
+import { InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime"
+import { GetObjectCommand } from "@aws-sdk/client-s3"
+import { transcribeClient, bedrockClient, s3Client } from "@/lib/aws"
+import { getVideo, updateVideo } from "@/lib/dynamo"
+
+// Helper: wait for Transcribe job to complete
+async function waitForTranscription(jobName: string): Promise<string> {
+  for (let i = 0; i < 60; i++) {
+    await new Promise(r => setTimeout(r, 5000))
+    
+    const result = await transcribeClient.send(
+      new GetTranscriptionJobCommand({ TranscriptionJobName: jobName })
+    )
+    
+    const status = result.TranscriptionJob?.TranscriptionJobStatus
+    
+    if (status === "COMPLETED") {
+      const transcriptUri = result.TranscriptionJob?.Transcript?.TranscriptFileUri
+      if (!transcriptUri) throw new Error("No transcript URI")
+      
+      const url = new URL(transcriptUri)
+      const key = url.pathname.substring(1).split("/").slice(1).join("/")
+      
+      const s3Response = await s3Client.send(new GetObjectCommand({
+        Bucket: process.env.S3_BUCKET_NAME!,
+        Key: key
+      }))
+      
+      const body = await s3Response.Body?.transformToString()
+      const transcriptData = JSON.parse(body || "{}")
+      return transcriptData.results?.transcripts?.[0]?.transcript || ""
+    }
+    
+    if (status === "FAILED") throw new Error("Transcription failed")
+  }
+  throw new Error("Transcription timeout")
+}
+
+// Helper: call Nova Pro on Bedrock
+async function callNova(prompt: string): Promise<string> {
+  const response = await bedrockClient.send(new InvokeModelCommand({
+    modelId: process.env.BEDROCK_MODEL_ID || "eu.amazon.nova-pro-v1:0",
+    contentType: "application/json",
+    accept: "application/json",
+    body: JSON.stringify({
+      messages: [{
+        role: "user",
+        content: [{ text: prompt }]
+      }]
+    })
+  }))
+  
+  const result = JSON.parse(Buffer.from(response.body).toString())
+  return result.output.message.content[0].text
+}
+
+export async function POST(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id: videoId } = await params
+
+  try {
+    // 1. Get video from DynamoDB
+    const video = await getVideo(videoId)
+    if (!video) return NextResponse.json({ error: "Video not found" }, { status: 404 })
+
+    // 2. Update status to processing
+    await updateVideo(videoId, { status: "processing" })
+
+    // 3. Start transcription
+    const jobName = `clipflow-${videoId}-${Date.now()}`
+    
+    await transcribeClient.send(new StartTranscriptionJobCommand({
+      TranscriptionJobName: jobName,
+      Media: { 
+        MediaFileUri: `s3://${process.env.S3_BUCKET_NAME}/${video.s3Key}` 
+      },
+      MediaFormat: video.s3Key.split(".").pop() as any || "mp4",
+      LanguageCode: "en-US",
+      OutputBucketName: process.env.S3_BUCKET_NAME!,
+      OutputKey: `transcripts/${videoId}.json`
+    }))
+
+    // 4. Wait for transcription
+    const transcript = await waitForTranscription(jobName)
+
+    // 5. Call Nova Pro via Bedrock for all content generation
+    const prompt = `You are an expert social media content strategist with deep knowledge of viral content.
+
+A creator has uploaded a video titled: "${video.title}"
+
+Video transcript:
+"${transcript.slice(0, 3000)}"
+
+Generate optimized content for each platform. Return ONLY a valid JSON object with this exact structure:
+
+{
+  "youtube": {
+    "title": "engaging YouTube title under 60 chars",
+    "description": "detailed YouTube description 150-200 words with value, timestamps mentioned, and call to action",
+    "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"]
+  },
+  "tiktok": {
+    "caption": "punchy TikTok caption under 150 chars with hook",
+    "hooks": ["opening hook option 1", "opening hook option 2"]
+  },
+  "instagram": {
+    "caption": "Instagram caption 100-150 words with storytelling and line breaks",
+    "reels_caption": "short punchy version under 100 chars for Reels"
+  },
+  "twitter": {
+    "tweet": "Twitter/X post under 280 chars with impact",
+    "thread_starter": "thread version first tweet"
+  },
+  "linkedin": {
+    "post": "professional LinkedIn post 150-200 words with insights and professional value"
+  },
+  "hashtags": {
+    "general": ["hashtag1", "hashtag2", "hashtag3", "hashtag4", "hashtag5"],
+    "niche": ["niche1", "niche2", "niche3", "niche4", "niche5"],
+    "trending": ["trend1", "trend2", "trend3"]
+  },
+  "viralScore": {
+    "score": 75,
+    "reasoning": "2-3 sentences explaining why this content will or won't perform well",
+    "improvements": ["improvement tip 1", "improvement tip 2", "improvement tip 3"]
+  },
+  "keyMoments": [
+    {"timestamp": "0:30", "description": "key moment description", "clipWorthy": true},
+    {"timestamp": "1:45", "description": "key moment description", "clipWorthy": false}
+  ]
+}`
+
+    const aiResponse = await callNova(prompt)
+    
+    // 6. Parse AI response
+    let aiContent
+    try {
+      const jsonMatch = aiResponse.match(/\{[\s\S]*\}/)
+      aiContent = jsonMatch ? JSON.parse(jsonMatch[0]) : null
+    } catch {
+      aiContent = null
+    }
+
+    if (!aiContent) {
+      await updateVideo(videoId, { 
+        status: "ready",
+        transcript: transcript.slice(0, 5000),
+        error: "AI parsing failed, using defaults"
+      })
+      return NextResponse.json({ success: true, note: "Used fallback" })
+    }
+
+    // 7. Save everything to DynamoDB
+    await updateVideo(videoId, {
+      status: "ready",
+      transcript: transcript.slice(0, 5000),
+      youtube: JSON.stringify(aiContent.youtube),
+      tiktok: JSON.stringify(aiContent.tiktok),
+      instagram: JSON.stringify(aiContent.instagram),
+      twitter: JSON.stringify(aiContent.twitter),
+      linkedin: JSON.stringify(aiContent.linkedin),
+      hashtags: JSON.stringify(aiContent.hashtags),
+      viralScore: aiContent.viralScore?.score || 50,
+      viralReasoning: aiContent.viralScore?.reasoning || "",
+      viralImprovements: JSON.stringify(aiContent.viralScore?.improvements || []),
+      keyMoments: JSON.stringify(aiContent.keyMoments || []),
+    })
+
+    return NextResponse.json({ success: true, viralScore: aiContent.viralScore?.score })
+
+  } catch (error: any) {
+    console.error("Processing error:", error)
+    await updateVideo(videoId, { 
+      status: "error", 
+      error: error.message 
+    })
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+}
