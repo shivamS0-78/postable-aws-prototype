@@ -11,20 +11,25 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        // Exchange authorization code for access token
+        const params = new URLSearchParams()
+        params.append("grant_type", "authorization_code")
+        params.append("code", code)
+        params.append("client_id", process.env.LINKEDIN_CLIENT_ID!)
+        params.append("client_secret", process.env.LINKEDIN_CLIENT_SECRET!)
+        params.append("redirect_uri", `${baseUrl}/api/auth/linkedin/callback`)
+
+        console.log("-> Starting LinkedIn token exchange")
         const tokenRes = await fetch("https://www.linkedin.com/oauth/v2/accessToken", {
             method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({
-                grant_type: "authorization_code",
-                code,
-                client_id: process.env.LINKEDIN_CLIENT_ID!,
-                client_secret: process.env.LINKEDIN_CLIENT_SECRET!,
-                redirect_uri: `${baseUrl}/api/auth/linkedin/callback`,
-            }),
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Accept": "application/json"
+            },
+            body: params.toString(),
         })
 
         const tokens = await tokenRes.json()
+        console.log("-> LinkedIn token response status:", tokenRes.status)
 
         if (!tokenRes.ok) {
             console.error("LinkedIn token exchange failed:", tokens)

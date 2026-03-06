@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import axios from "axios"
+import { CalendarData, ScheduledItem, DayData, loadData, saveData, toKey } from "@/lib/scheduler-utils"
 
 // ─── Types ───────────────────────────────────────────────────────────
 interface Video {
@@ -19,24 +20,7 @@ interface ConnectedAccount {
     connectedAt: string
 }
 
-interface ScheduledItem {
-    videoId: string
-    videoTitle: string
-    time: string
-    platforms: string[]
-    autoUpload: boolean
-    publishStatus?: "pending" | "publishing" | "published" | "failed"
-    publishMessage?: string
-}
-
-interface DayData {
-    scheduled: ScheduledItem[]
-    note: string
-}
-
-type CalendarData = Record<string, DayData>
-
-// ─── Platform config (mirrors Settings page) ─────────────────────────
+// Platform config (mirrors Settings page)
 const PLATFORM_CONFIG: Record<string, { label: string; icon: string; color: string; bg: string; border: string }> = {
     youtube: { label: "YouTube", icon: "▶", color: "text-red-400", bg: "bg-red-500/15", border: "border-red-500/30" },
     instagram: { label: "Instagram", icon: "📷", color: "text-pink-400", bg: "bg-pink-500/15", border: "border-pink-500/30" },
@@ -44,8 +28,6 @@ const PLATFORM_CONFIG: Record<string, { label: string; icon: string; color: stri
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────
-const toKey = (d: Date) =>
-    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 const DAYS_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -87,17 +69,6 @@ function isPast(date: Date, today: Date) {
     const d = new Date(date.getFullYear(), date.getMonth(), date.getDate())
     const t = new Date(today.getFullYear(), today.getMonth(), today.getDate())
     return d < t
-}
-
-// ─── Storage ─────────────────────────────────────────────────────────
-const STORAGE_KEY = "postable_scheduler_data"
-function loadData(): CalendarData {
-    if (typeof window === "undefined") return {}
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}") } catch { return {} }
-}
-function saveData(data: CalendarData) {
-    if (typeof window === "undefined") return
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
 }
 
 // ─── Circular Time Picker ────────────────────────────────────────────
@@ -282,120 +253,28 @@ export default function SchedulerPage() {
         setCalendarData(loadData())
         axios.get("/api/videos").then(r => setVideos(r.data.videos || [])).catch(() => { })
         axios.get("/api/connected-accounts").then(r => setConnectedAccounts(r.data.accounts || [])).catch(() => { })
+
+        const handleUpdate = () => {
+            setCalendarData(loadData())
+        }
+        window.addEventListener("scheduler-updated", handleUpdate)
+        return () => window.removeEventListener("scheduler-updated", handleUpdate)
     }, [])
 
-    useEffect(() => { saveData(calendarData) }, [calendarData])
+    const isInitialMount = useRef(true)
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false
+            return
+        }
+        saveData(calendarData)
+    }, [calendarData])
 
     // Show toast helper
     const showToast = useCallback((message: string, type: "success" | "error" | "info") => {
         setToast({ message, type })
         setTimeout(() => setToast(null), 5000)
     }, [])
-
-    // ─── Auto-Publish Timer ─────────────────────────────────────────────
-    useEffect(() => {
-        const checkScheduledPublishes = async () => {
-            const now = new Date()
-            const todayKey = toKey(now)
-            const currentData = loadData()
-            const dayData = currentData[todayKey]
-            if (!dayData?.scheduled) return
-
-            for (const item of dayData.scheduled) {
-                if (!item.autoUpload) continue
-                if (item.publishStatus === "published" || item.publishStatus === "publishing") continue
-                if (!item.platforms || item.platforms.length === 0) continue
-
-                // Check if it's time
-                const [schedH, schedM] = item.time.split(":").map(Number)
-                const nowH = now.getHours()
-                const nowM = now.getMinutes()
-
-                if (schedH < nowH || (schedH === nowH && schedM <= nowM)) {
-                    // Prevent duplicate publishes
-                    const publishKey = `${todayKey}_${item.videoId}`
-                    if (publishingRef.current.has(publishKey)) continue
-                    publishingRef.current.add(publishKey)
-
-                    // Mark as publishing
-                    setCalendarData(prev => {
-                        const day = prev[todayKey]
-                        if (!day) return prev
-                        return {
-                            ...prev,
-                            [todayKey]: {
-                                ...day,
-                                scheduled: day.scheduled.map(s =>
-                                    s.videoId === item.videoId
-                                        ? { ...s, publishStatus: "publishing" as const, publishMessage: "Uploading..." }
-                                        : s
-                                ),
-                            },
-                        }
-                    })
-
-                    showToast(`🚀 Publishing "${item.videoTitle}" to ${item.platforms.map(p => PLATFORM_CONFIG[p]?.label || p).join(", ")}...`, "info")
-
-                    try {
-                        const res = await axios.post("/api/scheduled-publish", {
-                            videoId: item.videoId,
-                            platforms: item.platforms,
-                        })
-
-                        const results = res.data.results || {}
-                        const allSuccess = Object.values(results).every((r: any) => r.success)
-                        const messages = Object.entries(results).map(([p, r]: [string, any]) =>
-                            `${PLATFORM_CONFIG[p]?.label || p}: ${r.message}`
-                        ).join("; ")
-
-                        setCalendarData(prev => {
-                            const day = prev[todayKey]
-                            if (!day) return prev
-                            return {
-                                ...prev,
-                                [todayKey]: {
-                                    ...day,
-                                    scheduled: day.scheduled.map(s =>
-                                        s.videoId === item.videoId
-                                            ? { ...s, publishStatus: allSuccess ? "published" as const : "failed" as const, publishMessage: messages }
-                                            : s
-                                    ),
-                                },
-                            }
-                        })
-
-                        if (allSuccess) {
-                            showToast(`✅ "${item.videoTitle}" published successfully!`, "success")
-                        } else {
-                            showToast(`⚠️ "${item.videoTitle}" publish completed with issues: ${messages}`, "error")
-                        }
-                    } catch (err: any) {
-                        setCalendarData(prev => {
-                            const day = prev[todayKey]
-                            if (!day) return prev
-                            return {
-                                ...prev,
-                                [todayKey]: {
-                                    ...day,
-                                    scheduled: day.scheduled.map(s =>
-                                        s.videoId === item.videoId
-                                            ? { ...s, publishStatus: "failed" as const, publishMessage: err.message || "Publish failed" }
-                                            : s
-                                    ),
-                                },
-                            }
-                        })
-                        showToast(`❌ Failed to publish "${item.videoTitle}": ${err.message}`, "error")
-                    }
-                }
-            }
-        }
-
-        // Run immediately and then every 30 seconds
-        checkScheduledPublishes()
-        const interval = setInterval(checkScheduledPublishes, 30000)
-        return () => clearInterval(interval)
-    }, [showToast])
     useEffect(() => { if (noteModal && noteRef.current) noteRef.current.focus() }, [noteModal])
 
     // ─── Navigation ────────────────────────────────────────────────────
@@ -585,10 +464,11 @@ export default function SchedulerPage() {
                         <div className="flex items-center gap-1.5">
                             <span className="text-purple-400 text-[10px]">🎬</span>
                             <span className="truncate flex-1 text-[11px] font-medium text-purple-200">{item.videoTitle}</span>
-                            {!pastDay && (
+                            {(!pastDay || item.publishStatus) && (
                                 <button
                                     onClick={() => removeScheduled(key, item.videoId)}
                                     className="opacity-0 group-hover/item:opacity-100 text-purple-400 hover:text-red-400 transition-all text-[10px] shrink-0"
+                                    title="Remove from calendar"
                                 >
                                     ✕
                                 </button>
@@ -646,8 +526,8 @@ export default function SchedulerPage() {
             {/* Toast Notification */}
             {toast && (
                 <div className={`fixed top-4 right-4 z-[60] max-w-md px-4 py-3 rounded-xl border text-sm font-medium shadow-2xl transition-all animate-in slide-in-from-right ${toast.type === "success" ? "bg-green-900/90 border-green-600 text-green-200"
-                        : toast.type === "error" ? "bg-red-900/90 border-red-600 text-red-200"
-                            : "bg-blue-900/90 border-blue-600 text-blue-200"
+                    : toast.type === "error" ? "bg-red-900/90 border-red-600 text-red-200"
+                        : "bg-blue-900/90 border-blue-600 text-blue-200"
                     }`}>
                     {toast.message}
                 </div>
