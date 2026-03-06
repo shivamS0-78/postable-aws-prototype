@@ -86,6 +86,12 @@ export default function Dashboard() {
               🔥 Trends
             </button>
             <button
+              onClick={() => router.push("/scheduler")}
+              className="text-gray-300 hover:text-white border border-gray-700 hover:border-gray-500 px-4 py-2 rounded-lg text-sm transition-colors"
+            >
+              📅 Scheduler
+            </button>
+            <button
               onClick={() => router.push("/settings")}
               className="text-gray-300 hover:text-white border border-gray-700 hover:border-gray-500 px-4 py-2 rounded-lg text-sm transition-colors"
             >
