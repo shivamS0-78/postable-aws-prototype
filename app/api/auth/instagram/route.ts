@@ -8,11 +8,12 @@ export async function GET() {
         return NextResponse.json({ error: "Instagram OAuth not configured" }, { status: 500 })
     }
 
-    const authUrl = new URL("https://www.facebook.com/v21.0/dialog/oauth")
+    // Use the Instagram-specific OAuth endpoint for Business Login
+    const authUrl = new URL("https://www.instagram.com/oauth/authorize")
     authUrl.searchParams.set("client_id", clientId)
     authUrl.searchParams.set("redirect_uri", redirectUri)
     authUrl.searchParams.set("response_type", "code")
-    authUrl.searchParams.set("scope", "instagram_basic,instagram_content_publish,pages_show_list")
+    authUrl.searchParams.set("scope", "instagram_business_basic,instagram_business_content_publish,instagram_business_manage_messages")
 
     return NextResponse.redirect(authUrl.toString())
 }
