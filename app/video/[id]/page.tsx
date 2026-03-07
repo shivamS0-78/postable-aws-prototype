@@ -185,43 +185,36 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
   return (
     <div className="min-h-screen bg-[#f4f4f0] text-black font-satoshi selection:bg-[#ff6b6b] selection:text-white pb-32">
 
-      {/* Header */}
-      <div className="border-b-4 border-black px-6 py-4 sticky top-0 bg-white z-10 shadow-[0px_4px_0px_0px_rgba(0,0,0,1)]">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button onClick={() => router.push("/")} className="font-cabinet font-black uppercase text-sm border-2 border-black rounded px-3 py-1.5 hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all bg-white text-black">
-              ← Dashboard
-            </button>
-            <span className="text-black font-cabinet font-black">/</span>
-            <h1 className="font-cabinet font-black text-2xl uppercase text-black truncate max-w-sm tracking-wide">{video.title}</h1>
+      {/* Main Content */}
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-4 border-black pb-4 mb-6">
+          <div className="flex items-center gap-3">
+            <span className="text-4xl">🎬</span>
+            <h1 className="text-4xl font-black font-cabinet uppercase text-black truncate max-w-2xl tracking-wide">{video.title}</h1>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={() => router.push(`/analytics/${id}`)}
-              className="text-sm font-cabinet font-black uppercase text-black bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] px-4 py-2 rounded transition-all"
+              className="text-sm font-cabinet font-black uppercase text-black bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] px-4 py-3 rounded transition-all"
             >
               📊 Analytics
             </button>
             <button
               onClick={handlePublish}
               disabled={published}
-              className={`text-sm font-cabinet font-black uppercase border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] px-5 py-2 rounded transition-all ${published ? "bg-[#b5e550] text-black cursor-not-allowed" : "bg-white hover:bg-[#ff6b6b] hover:text-white hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"}`}
+              className={`text-sm font-cabinet font-black uppercase border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] px-5 py-3 rounded transition-all ${published ? "bg-[#b5e550] text-black cursor-not-allowed" : "bg-white hover:bg-[#ff6b6b] hover:text-white hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"}`}
             >
               {published ? "✅ Scheduled!" : "Approve & Schedule →"}
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Published Banner */}
-      {published && (
-        <div className="bg-[#b5e550] border-b-4 border-black px-6 py-3 text-center text-black font-cabinet font-black uppercase tracking-wide shadow-[0px_4px_0px_0px_rgba(0,0,0,1)]">
-          🎉 Content approved and scheduled for posting across all selected platforms!
-        </div>
-      )}
-
-      {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-6 py-8">
+        {/* Published Banner */}
+        {published && (
+          <div className="mb-6 bg-[#b5e550] border-4 border-black p-4 rounded text-center text-black font-cabinet font-black uppercase tracking-wide shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            🎉 Content approved and scheduled for posting across all selected platforms!
+          </div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
           {/* Left Column */}

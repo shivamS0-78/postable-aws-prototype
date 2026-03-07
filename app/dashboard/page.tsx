@@ -25,32 +25,11 @@ export default function Dashboard() {
   const [videos, setVideos] = useState<Video[]>([])
   const [loading, setLoading] = useState(true)
   const [deletingId, setDeletingId] = useState<string | null>(null)
-  const [userEmail, setUserEmail] = useState<string | null>(null)
-
   useEffect(() => {
-    fetchUser()
     fetchVideos()
     const interval = setInterval(fetchVideos, 5000)
     return () => clearInterval(interval)
   }, [])
-
-  const fetchUser = async () => {
-    try {
-      const { data } = await axios.get("/api/auth/me")
-      setUserEmail(data.user?.email)
-    } catch (err) {
-      console.error("Failed to fetch user session", err)
-    }
-  }
-
-  const handleLogout = async () => {
-    try {
-      await axios.post("/api/auth/logout")
-      router.push("/login")
-    } catch (err) {
-      console.error("Logout failed", err)
-    }
-  }
 
   const fetchVideos = async () => {
     try {
@@ -88,57 +67,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#f4f4f0] text-black font-satoshi selection:bg-[#ff6b6b] selection:text-white">
-      {/* Header */}
-      <div className="border-b-4 border-black bg-white px-6 py-4">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#b5e550] border-2 border-black rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center text-lg font-black font-cabinet">P</div>
-            <h1 className="text-2xl font-black font-cabinet tracking-tighter uppercase">POSTABLE</h1>
-            <span className="text-xs bg-[#b5e550] border-2 border-black text-black font-bold px-2 py-0.5 rounded-full shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-              Powered by AWS Bedrock
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            {userEmail && (
-              <div className="flex items-center gap-3 mr-4 border-r-2 border-black pr-5">
-                <span className="text-sm text-gray-600 font-bold truncate max-w-[150px]" title={userEmail}>
-                  {userEmail}
-                </span>
-                <button
-                  onClick={handleLogout}
-                  className="font-cabinet font-bold uppercase text-red-600 hover:text-red-800 text-sm transition-colors"
-                >
-                  Logout
-                </button>
-              </div>
-            )}
-            <button
-              onClick={() => router.push("/trends")}
-              className="bg-white border-2 border-black text-black font-cabinet font-bold uppercase text-sm px-4 py-2 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
-            >
-              🔥 Trends
-            </button>
-            <button
-              onClick={() => router.push("/scheduler")}
-              className="bg-white border-2 border-black text-black font-cabinet font-bold uppercase text-sm px-4 py-2 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
-            >
-              📅 Scheduler
-            </button>
-            <button
-              onClick={() => router.push("/settings")}
-              className="bg-white border-2 border-black text-black font-cabinet font-bold uppercase text-sm px-4 py-2 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
-            >
-              ⚙️ Settings
-            </button>
-            <button
-              onClick={() => router.push("/upload")}
-              className="bg-[#4dabf7] border-2 border-black text-white font-cabinet font-bold uppercase text-sm px-4 py-2 rounded shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all ml-2"
-            >
-              + Upload Video
-            </button>
-          </div>
-        </div>
-      </div>
+
 
       <div className="max-w-6xl mx-auto px-6 py-8 space-y-8">
         {/* Stats */}

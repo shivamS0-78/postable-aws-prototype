@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SchedulerDaemon from "./components/SchedulerDaemon";
+import AppLayout from "./components/AppLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,7 +29,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <AppLayout>
+          {children}
+        </AppLayout>
         <SchedulerDaemon />
       </body>
     </html>
