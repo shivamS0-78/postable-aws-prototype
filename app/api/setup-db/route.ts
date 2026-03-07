@@ -10,43 +10,30 @@ const client = new DynamoDBClient({
 })
 
 export async function GET(req: NextRequest) {
-    const tableName = "postable-users-accounts"
-
     try {
-        // Check if table already exists
-        let exists = false
+        const t1 = "postable-users-accounts"
+        const t2 = "postable-connected-accounts"
+
+        let schema1 = "Not Found"
+        let schema2 = "Not Found"
+
         try {
-            await client.send(new DescribeTableCommand({ TableName: tableName }))
-            exists = true
-        } catch (e: any) {
-            if (e.name !== "ResourceNotFoundException") {
-                throw e
-            }
-        }
+            const r1 = await client.send(new DescribeTableCommand({ TableName: t1 }))
+            schema1 = JSON.stringify(r1.Table?.KeySchema)
+        } catch (e) { }
 
-        if (exists) {
-            return NextResponse.json({ success: true, message: `Table '${tableName}' already exists.` })
-        }
+        try {
+            const r2 = await client.send(new DescribeTableCommand({ TableName: t2 }))
+            schema2 = JSON.stringify(r2.Table?.KeySchema)
+        } catch (e) { }
 
-        console.log(`Creating DynamoDB table: ${tableName}...`)
-
-        await client.send(new CreateTableCommand({
-            TableName: tableName,
-            AttributeDefinitions: [
-                { AttributeName: "userId", AttributeType: "S" },
-                { AttributeName: "platform", AttributeType: "S" }
-            ],
-            KeySchema: [
-                { AttributeName: "userId", KeyType: "HASH" }, // Partition key
-                { AttributeName: "platform", KeyType: "RANGE" } // Sort key
-            ],
-            BillingMode: "PAY_PER_REQUEST"
-        }))
-
-        return NextResponse.json({ success: true, message: `Successfully requested creation of '${tableName}'. It will be active momentarily.` })
+        return NextResponse.json({
+            [t1]: JSON.parse(schema1 === "Not Found" ? 'null' : schema1),
+            [t2]: JSON.parse(schema2 === "Not Found" ? 'null' : schema2)
+        })
 
     } catch (error: any) {
-        console.error("Failed to create table:", error)
+        console.error("Failed:", error)
         return NextResponse.json({ success: false, error: error.message }, { status: 500 })
     }
 }

@@ -29,7 +29,18 @@ export async function DELETE(req: NextRequest) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }
 
-        const { platform } = await req.json()
+        let platform = req.nextUrl.searchParams.get("platform")
+
+        // Fallback to body just in case it was sent as JSON
+        if (!platform) {
+            try {
+                const body = await req.json()
+                platform = body.platform
+            } catch (e) {
+                // Ignore json parsing error if body empty
+            }
+        }
+
         if (!platform) {
             return NextResponse.json({ error: "Platform is required" }, { status: 400 })
         }
