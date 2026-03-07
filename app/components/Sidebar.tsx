@@ -38,6 +38,7 @@ export default function Sidebar({ isOpen, isMobile }: { isOpen: boolean, isMobil
         { href: "/", icon: "🏠", label: "Dashboard", exact: true },
         { href: "/upload", icon: "🎥", label: "Upload Video" },
         { href: "/trends", icon: "🔥", label: "Trends" },
+        { href: "/analytics", icon: "📊", label: "Analytics" },
         { href: "/scheduler", icon: "📅", label: "Scheduler" },
         { href: "/settings", icon: "⚙️", label: "Settings" }
     ]
