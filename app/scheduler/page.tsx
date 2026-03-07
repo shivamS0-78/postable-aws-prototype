@@ -533,142 +533,143 @@ export default function SchedulerPage() {
                 </div>
             )}
 
-            {/* Header */}
-            <div className="border-b-4 border-black bg-white px-6 py-4">
-                <div className="max-w-[1400px] mx-auto flex items-center gap-4">
-                    <button onClick={() => router.push("/")} className="bg-white border-2 border-black text-black font-cabinet font-bold uppercase text-sm px-4 py-2 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all">← Back</button>
-                    <div className="flex items-center gap-3">
-                        <span className="text-2xl">📅</span>
-                        <h1 className="text-2xl font-black font-cabinet uppercase tracking-wide">Scheduler</h1>
-                    </div>
-                </div>
-            </div>
-
-            <div className="max-w-[1400px] mx-auto px-6 py-6 flex gap-6">
-                {/* ─── Main Calendar ───────────────────────────────── */}
-                <div className="flex-1 min-w-0">
-                    {/* Toolbar */}
-                    <div className="flex items-center justify-between mb-6 bg-white border-4 border-black p-4 rounded shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-                        <div className="flex items-center gap-4">
-                            <div className="flex bg-white border-2 border-black rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
-                                <button onClick={goPrev} className="w-10 h-10 flex items-center justify-center font-cabinet font-black text-xl hover:bg-[#b5e550] border-r-2 border-black transition-colors">‹</button>
-                                <button onClick={goNext} className="w-10 h-10 flex items-center justify-center font-cabinet font-black text-xl hover:bg-[#4dabf7] transition-colors">›</button>
-                            </div>
-                            <h2 className="text-2xl font-cabinet font-black uppercase text-black">{heading}</h2>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <button onClick={goToday} className="px-4 py-2 font-cabinet font-black uppercase border-2 border-black rounded bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-[#ff6b6b] hover:text-white transition-all">Today</button>
-                            <div className="flex bg-[#f4f4f0] border-2 border-black rounded p-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                <button onClick={() => setView("month")} className={`px-4 py-1 font-cabinet font-black uppercase rounded border-2 border-transparent transition-all ${view === "month" ? "bg-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" : "text-gray-500 hover:text-black"}`}>Month</button>
-                                <button onClick={() => setView("week")} className={`px-4 py-1 font-cabinet font-black uppercase rounded border-2 border-transparent transition-all ${view === "week" ? "bg-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" : "text-gray-500 hover:text-black"}`}>Week</button>
-                            </div>
-                            <button onClick={() => setSidebarOpen(p => !p)} className={`px-4 py-2 font-cabinet font-black uppercase border-2 border-black rounded transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] ${sidebarOpen ? "bg-[#b5e550] text-black" : "bg-white text-black"}`}>🎬 Videos</button>
-                        </div>
-                    </div>
-
-                    {/* Day headers */}
-                    <div className="grid grid-cols-7 mb-2">
-                        {DAYS_SHORT.map(d => (
-                            <div key={d} className="text-center font-cabinet font-black text-black uppercase tracking-wider py-2 bg-white border-2 border-black mx-1 mb-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">{d}</div>
-                        ))}
-                    </div>
-
-                    {/* Month view */}
-                    {view === "month" && (
-                        <div className="grid grid-cols-7 gap-1">
-                            {getMonthGrid(currentDate.getFullYear(), currentDate.getMonth()).map(({ date, isCurrentMonth }) =>
-                                renderDayCell(date, isCurrentMonth)
-                            )}
-                        </div>
-                    )}
-
-                    {/* Week view */}
-                    {view === "week" && (
-                        <div className="grid grid-cols-7 gap-1">
-                            {getWeekDays(currentDate).map(date => renderDayCell(date, true))}
-                        </div>
-                    )}
-
-                    {/* Legend */}
-                    <div className="flex items-center gap-6 mt-6 text-sm font-cabinet font-bold text-black uppercase">
-                        <div className="flex items-center gap-2"><span className="w-3 h-3 border-2 border-black rounded bg-[#ff6b6b]" /> Today</div>
-                        <div className="flex items-center gap-2"><span className="text-black text-lg">🎬</span> Scheduled</div>
-                        <div className="flex items-center gap-2"><span className="text-black text-lg">📝</span> Note</div>
-                        <div className="flex items-center gap-2"><span className="text-[10px] bg-[#b5e550] text-black px-1.5 py-0.5 border-2 border-black rounded">AUTO</span> Auto-Upload</div>
-                        <div className="flex items-center gap-2"><span className="w-3 h-3 border-2 border-black bg-gray-200 opacity-50 rounded" /> Past (locked)</div>
-                    </div>
+            <div className="max-w-[1400px] mx-auto px-6 py-8">
+                <div className="flex items-center gap-3 mb-6 border-b-4 border-black pb-4">
+                    <span className="text-4xl">📅</span>
+                    <h1 className="text-4xl font-black font-cabinet uppercase tracking-wide">Scheduler</h1>
                 </div>
 
-                {/* ─── Video Sidebar ──────────────────────────────── */}
-                {sidebarOpen && (
-                    <div className="w-80 shrink-0">
-                        <div className="sticky top-6">
-                            <div className="bg-white border-4 border-black rounded shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
-                                <div className="px-5 py-4 border-b-4 border-black">
-                                    <h3 className="text-lg font-cabinet font-black uppercase text-black mb-3">Videos</h3>
-                                    <div className="relative">
-                                        <input
-                                            type="text"
-                                            placeholder="SEARCH VIDEOS..."
-                                            value={searchQuery}
-                                            onChange={e => setSearchQuery(e.target.value)}
-                                            className="w-full bg-white border-2 border-black rounded pl-9 pr-3 py-2 text-sm font-cabinet font-bold placeholder:text-gray-400 focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
-                                        />
-                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">🔍</span>
+                <div className="flex flex-col xl:flex-row gap-6">
+                    {/* ─── Main Calendar ───────────────────────────────── */}
+                    <div className="flex-1 min-w-0">
+                        {/* Toolbar */}
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 bg-white border-4 border-black p-4 rounded shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                            <div className="flex items-center gap-4 w-full sm:w-auto overflow-x-auto">
+                                <div className="flex bg-white border-2 border-black rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] overflow-hidden shrink-0">
+                                    <button onClick={goPrev} className="w-10 h-10 flex items-center justify-center font-cabinet font-black text-xl hover:bg-[#b5e550] border-r-2 border-black transition-colors">‹</button>
+                                    <button onClick={goNext} className="w-10 h-10 flex items-center justify-center font-cabinet font-black text-xl hover:bg-[#4dabf7] transition-colors">›</button>
+                                </div>
+                                <h2 className="text-xl sm:text-2xl font-cabinet font-black uppercase text-black whitespace-nowrap">{heading}</h2>
+                            </div>
+                            <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0">
+                                <button onClick={goToday} className="px-3 sm:px-4 py-2 font-cabinet font-black uppercase border-2 border-black rounded bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-[#ff6b6b] hover:text-white transition-all text-xs sm:text-base">Today</button>
+                                <div className="flex bg-[#f4f4f0] border-2 border-black rounded p-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] shrink-0">
+                                    <button onClick={() => setView("month")} className={`px-2 sm:px-4 py-1 font-cabinet font-black uppercase rounded border-2 border-transparent transition-all text-xs sm:text-base ${view === "month" ? "bg-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" : "text-gray-500 hover:text-black"}`}>Month</button>
+                                    <button onClick={() => setView("week")} className={`px-2 sm:px-4 py-1 font-cabinet font-black uppercase rounded border-2 border-transparent transition-all text-xs sm:text-base ${view === "week" ? "bg-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" : "text-gray-500 hover:text-black"}`}>Week</button>
+                                </div>
+                                <button onClick={() => setSidebarOpen(p => !p)} className={`px-3 sm:px-4 py-2 font-cabinet font-black uppercase border-2 border-black rounded transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] shrink-0 text-xs sm:text-base ${sidebarOpen ? "bg-[#b5e550] text-black" : "bg-white text-black"}`}>🎬 Videos</button>
+                            </div>
+                        </div>
+
+                        {/* Calendar Grid Wrapper */}
+                        <div className="overflow-x-auto pb-4 -mx-6 px-6 xl:mx-0 xl:px-0">
+                            <div className="min-w-[700px] xl:min-w-0">
+                                {/* Day headers */}
+                                <div className="grid grid-cols-7 mb-2">
+                                    {DAYS_SHORT.map(d => (
+                                        <div key={d} className="text-center font-cabinet font-black text-black uppercase tracking-wider py-2 bg-white border-2 border-black mx-1 mb-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">{d}</div>
+                                    ))}
+                                </div>
+
+                                {/* Month view */}
+                                {view === "month" && (
+                                    <div className="grid grid-cols-7 gap-1">
+                                        {getMonthGrid(currentDate.getFullYear(), currentDate.getMonth()).map(({ date, isCurrentMonth }) =>
+                                            renderDayCell(date, isCurrentMonth)
+                                        )}
                                     </div>
-                                </div>
-                                <div className="p-4 max-h-[calc(100vh-320px)] overflow-y-auto space-y-3">
-                                    {filteredVideos.length === 0 ? (
-                                        <div className="text-center py-10">
-                                            <div className="text-4xl mb-3">🎬</div>
-                                            <p className="font-cabinet font-bold uppercase text-sm text-gray-500 px-4">{videos.length === 0 ? "No videos uploaded yet" : "No match"}</p>
+                                )}
+
+                                {/* Week view */}
+                                {view === "week" && (
+                                    <div className="grid grid-cols-7 gap-1">
+                                        {getWeekDays(currentDate).map(date => renderDayCell(date, true))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Legend */}
+                        <div className="flex items-center gap-6 mt-6 text-sm font-cabinet font-bold text-black uppercase">
+                            <div className="flex items-center gap-2"><span className="w-3 h-3 border-2 border-black rounded bg-[#ff6b6b]" /> Today</div>
+                            <div className="flex items-center gap-2"><span className="text-black text-lg">🎬</span> Scheduled</div>
+                            <div className="flex items-center gap-2"><span className="text-black text-lg">📝</span> Note</div>
+                            <div className="flex items-center gap-2"><span className="text-[10px] bg-[#b5e550] text-black px-1.5 py-0.5 border-2 border-black rounded">AUTO</span> Auto-Upload</div>
+                            <div className="flex items-center gap-2"><span className="w-3 h-3 border-2 border-black bg-gray-200 opacity-50 rounded" /> Past (locked)</div>
+                        </div>
+                    </div>
+
+                    {/* ─── Video Sidebar ──────────────────────────────── */}
+                    {sidebarOpen && (
+                        <div className="w-full xl:w-80 shrink-0">
+                            <div className="sticky top-6">
+                                <div className="bg-white border-4 border-black rounded shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+                                    <div className="px-5 py-4 border-b-4 border-black">
+                                        <h3 className="text-lg font-cabinet font-black uppercase text-black mb-3">Videos</h3>
+                                        <div className="relative">
+                                            <input
+                                                type="text"
+                                                placeholder="SEARCH VIDEOS..."
+                                                value={searchQuery}
+                                                onChange={e => setSearchQuery(e.target.value)}
+                                                className="w-full bg-white border-2 border-black rounded pl-9 pr-3 py-2 text-sm font-cabinet font-bold placeholder:text-gray-400 focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                            />
+                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">🔍</span>
                                         </div>
-                                    ) : (
-                                        filteredVideos.map(video => (
-                                            <div
-                                                key={video.id}
-                                                draggable
-                                                onDragStart={e => onDragStart(e, video)}
-                                                className="flex items-center gap-3 px-3 py-3 border-2 border-black rounded bg-white hover:-translate-y-[2px] hover:-translate-x-[2px] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] cursor-grab active:cursor-grabbing transition-all group"
-                                            >
-                                                <div className="w-10 h-10 border-2 border-black bg-[#b5e550] rounded flex items-center justify-center text-xl shrink-0 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">🎬</div>
-                                                <div className="min-w-0 flex-1">
-                                                    <p className="text-sm font-cabinet font-black uppercase text-black truncate">{video.title}</p>
-                                                    <p className="text-[10px] font-satoshi font-bold text-gray-500">
-                                                        {new Date(video.createdAt).toLocaleDateString()}
-                                                        {video.viralScore && (
-                                                            <span className={`ml-2 inline-block px-1 border border-black rounded bg-[#f4f4f0] text-black`}>
-                                                                🔥 {video.viralScore}
-                                                            </span>
-                                                        )}
-                                                    </p>
-                                                </div>
-                                                <div className="shrink-0 text-gray-400 font-cabinet font-black group-hover:text-black">⣿</div>
+                                    </div>
+                                    <div className="p-4 max-h-[calc(100vh-320px)] overflow-y-auto space-y-3">
+                                        {filteredVideos.length === 0 ? (
+                                            <div className="text-center py-10">
+                                                <div className="text-4xl mb-3">🎬</div>
+                                                <p className="font-cabinet font-bold uppercase text-sm text-gray-500 px-4">{videos.length === 0 ? "No videos uploaded yet" : "No match"}</p>
                                             </div>
-                                        ))
-                                    )}
-                                </div>
-                                <div className="px-5 py-4 border-t-4 border-black">
-                                    <p className="text-xs font-cabinet font-black text-black uppercase mb-3">Connected Platforms</p>
-                                    <div className="flex items-center gap-2 flex-wrap">
-                                        {connectedAccounts.length === 0 ? (
-                                            <p className="text-xs font-cabinet font-bold uppercase text-gray-500">None — <span onClick={() => router.push("/settings")} className="text-blue-500 cursor-pointer hover:underline border-l-2 border-gray-300 pl-2 ml-1">connect in Settings</span></p>
                                         ) : (
-                                            connectedAccounts.map(a => (
-                                                <span key={a.platform} className={`text-[10px] px-2 py-1 uppercase font-cabinet font-bold rounded border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] bg-white text-black flex items-center gap-1`}>
-                                                    {PLATFORM_CONFIG[a.platform]?.icon} {a.username}
-                                                </span>
+                                            filteredVideos.map(video => (
+                                                <div
+                                                    key={video.id}
+                                                    draggable
+                                                    onDragStart={e => onDragStart(e, video)}
+                                                    className="flex items-center gap-3 px-3 py-3 border-2 border-black rounded bg-white hover:-translate-y-[2px] hover:-translate-x-[2px] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] cursor-grab active:cursor-grabbing transition-all group"
+                                                >
+                                                    <div className="w-10 h-10 border-2 border-black bg-[#b5e550] rounded flex items-center justify-center text-xl shrink-0 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">🎬</div>
+                                                    <div className="min-w-0 flex-1">
+                                                        <p className="text-sm font-cabinet font-black uppercase text-black truncate">{video.title}</p>
+                                                        <p className="text-[10px] font-satoshi font-bold text-gray-500">
+                                                            {new Date(video.createdAt).toLocaleDateString()}
+                                                            {video.viralScore && (
+                                                                <span className={`ml-2 inline-block px-1 border border-black rounded bg-[#f4f4f0] text-black`}>
+                                                                    🔥 {video.viralScore}
+                                                                </span>
+                                                            )}
+                                                        </p>
+                                                    </div>
+                                                    <div className="shrink-0 text-gray-400 font-cabinet font-black group-hover:text-black">⣿</div>
+                                                </div>
                                             ))
                                         )}
                                     </div>
-                                </div>
-                                <div className="px-5 py-3 border-t-4 border-black bg-[#f4f4f0] text-center">
-                                    <p className="text-xs font-cabinet font-bold uppercase text-black">Drag videos onto dates to schedule</p>
+                                    <div className="px-5 py-4 border-t-4 border-black">
+                                        <p className="text-xs font-cabinet font-black text-black uppercase mb-3">Connected Platforms</p>
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                            {connectedAccounts.length === 0 ? (
+                                                <p className="text-xs font-cabinet font-bold uppercase text-gray-500">None — <span onClick={() => router.push("/settings")} className="text-blue-500 cursor-pointer hover:underline border-l-2 border-gray-300 pl-2 ml-1">connect in Settings</span></p>
+                                            ) : (
+                                                connectedAccounts.map(a => (
+                                                    <span key={a.platform} className={`text-[10px] px-2 py-1 uppercase font-cabinet font-bold rounded border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] bg-white text-black flex items-center gap-1`}>
+                                                        {PLATFORM_CONFIG[a.platform]?.icon} {a.username}
+                                                    </span>
+                                                ))
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="px-5 py-3 border-t-4 border-black bg-[#f4f4f0] text-center">
+                                        <p className="text-xs font-cabinet font-bold uppercase text-black">Drag videos onto dates to schedule</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
 
             {/* ─── Schedule Modal ──────────────────────────────── */}

@@ -43,21 +43,16 @@ export default function TrendsPage() {
 
   return (
     <div className="min-h-screen bg-[#f4f4f0] text-black font-satoshi pb-32">
-      {/* Header */}
-      <div className="border-b-4 border-black px-6 py-4 sticky top-0 bg-white z-10 shadow-[0px_4px_0px_0px_rgba(0,0,0,1)]">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button onClick={() => router.push("/")} className="font-cabinet font-black uppercase text-sm border-2 border-black rounded px-3 py-1.5 hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all bg-white text-black">← Dashboard</button>
-            <span className="text-black font-cabinet font-black">/</span>
-            <h1 className="font-cabinet font-black text-2xl uppercase text-black">🔥 AI Trend Detection</h1>
+      <div className="max-w-4xl mx-auto px-6 py-8 space-y-8">
+        <div className="flex items-center justify-between border-b-4 border-black pb-4">
+          <div className="flex items-center gap-3">
+            <span className="text-4xl">🔥</span>
+            <h1 className="text-4xl font-black font-cabinet uppercase tracking-wide">AI Trend Detection</h1>
           </div>
-          <span className="text-[10px] font-cabinet font-black text-black uppercase bg-[#b5e550] px-2 py-1 rounded border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <span className="text-xs font-cabinet font-black text-black uppercase bg-[#b5e550] px-3 py-1.5 rounded border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
             Powered by Amazon Bedrock
           </span>
         </div>
-      </div>
-
-      <div className="max-w-4xl mx-auto px-6 py-8 space-y-8">
         {/* Search */}
         <div className="bg-white border-4 border-black rounded shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8">
           <h2 className="font-cabinet font-black uppercase tracking-wider text-xl mb-6 text-black border-b-2 border-black pb-2">Discover What's Trending in Your Niche</h2>

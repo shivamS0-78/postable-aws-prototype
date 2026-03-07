@@ -83,23 +83,12 @@ export default function UploadPage() {
 
   return (
     <div className="min-h-screen bg-[#f4f4f0] text-black font-satoshi selection:bg-[#ff6b6b] selection:text-white">
-      {/* Header */}
-      <div className="border-b-4 border-black bg-white px-6 py-4">
-        <div className="max-w-3xl mx-auto flex items-center gap-4">
-          <button
-            onClick={() => router.push("/")}
-            className="bg-white border-2 border-black text-black font-cabinet font-bold uppercase text-sm px-4 py-2 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
-          >
-            ← Back
-          </button>
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">📹</span>
-            <h1 className="text-2xl font-black font-cabinet uppercase tracking-wide">Upload Video</h1>
-          </div>
-        </div>
-      </div>
-
       <div className="max-w-3xl mx-auto px-6 py-10 space-y-8">
+        <div className="flex items-center gap-3 border-b-4 border-black pb-4">
+          <span className="text-4xl">📹</span>
+          <h1 className="text-4xl font-black font-cabinet uppercase tracking-wide">Upload Video</h1>
+        </div>
+
         {/* Title Input */}
         <div>
           <label className="block font-cabinet font-black text-lg uppercase tracking-wider mb-2">
