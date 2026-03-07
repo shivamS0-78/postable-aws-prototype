@@ -32,11 +32,11 @@ const PLATFORM_ICONS: any = {
   linkedin: "💼"
 }
 const PLATFORM_COLORS: any = {
-  youtube: "border-red-500 bg-red-950/20",
-  tiktok: "border-pink-500 bg-pink-950/20",
-  instagram: "border-orange-500 bg-orange-950/20",
-  twitter: "border-sky-500 bg-sky-950/20",
-  linkedin: "border-blue-500 bg-blue-950/20"
+  youtube: "bg-[#ff6b6b]",
+  tiktok: "bg-white",
+  instagram: "bg-[#ffe066]",
+  twitter: "bg-[#4dabf7]",
+  linkedin: "bg-[#b5e550]"
 }
 
 function parseJSON(str: string | null) {
@@ -118,45 +118,45 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
 
   if (loading || video?.status === "processing" || video?.status === "uploaded") {
     return (
-      <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
-        <div className="text-center max-w-md space-y-6">
+      <div className="min-h-screen bg-[#f4f4f0] text-black flex items-center justify-center font-satoshi">
+        <div className="text-center max-w-md w-full bg-white border-4 border-black p-8 rounded shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-6">
           <div className="w-20 h-20 mx-auto relative">
-            <div className="w-20 h-20 rounded-full border-4 border-purple-500 border-t-transparent animate-spin" />
-            <div className="absolute inset-0 flex items-center justify-center text-2xl">🤖</div>
+            <div className="w-20 h-20 rounded-full border-4 border-black border-t-[#4dabf7] animate-spin shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" />
+            <div className="absolute inset-0 flex items-center justify-center text-3xl">🤖</div>
           </div>
           <div>
-            <h2 className="text-2xl font-bold mb-2">AI is Working...</h2>
-            <p className="text-purple-300 font-medium">{processingStage}</p>
+            <h2 className="text-3xl font-cabinet font-black uppercase text-black mb-2 tracking-wide">AI is Working...</h2>
+            <p className="text-[#4dabf7] font-cabinet font-bold uppercase">{processingStage}</p>
           </div>
-          <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4 text-left space-y-2">
-            <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">AWS Services Active</p>
+          <div className="bg-[#f4f4f0] border-4 border-black rounded p-4 text-left space-y-3 shadow-inner">
+            <p className="text-xs text-black font-cabinet font-black uppercase tracking-wider border-b-2 border-black pb-2">AWS Services Active</p>
             {[
               { service: "Amazon S3", job: "Video stored ✅" },
               { service: "Amazon Transcribe", job: "Converting audio to text..." },
               { service: "Amazon Bedrock", job: "Nova Pro generating content..." },
               { service: "Amazon DynamoDB", job: "Saving results..." },
             ].map(item => (
-              <div key={item.service} className="flex justify-between text-sm">
-                <span className="text-gray-400">{item.service}</span>
-                <span className="text-gray-300">{item.job}</span>
+              <div key={item.service} className="flex flex-col sm:flex-row sm:justify-between text-xs sm:text-sm font-satoshi font-bold">
+                <span className="text-gray-500 uppercase">{item.service}</span>
+                <span className="text-black">{item.job}</span>
               </div>
             ))}
           </div>
-          <p className="text-gray-500 text-sm">This takes 2-3 minutes for a typical video</p>
+          <p className="text-gray-500 text-xs font-satoshi font-bold uppercase">This takes 2-3 minutes for a typical video</p>
         </div>
       </div>
     )
   }
 
   if (!video) return (
-    <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
+    <div className="min-h-screen bg-[#f4f4f0] text-black flex items-center justify-center font-cabinet font-black text-2xl uppercase">
       Video not found
     </div>
   )
 
   const viralScore = video.viralScore || 0
-  const viralColor = viralScore >= 70 ? "text-green-400" : viralScore >= 40 ? "text-yellow-400" : "text-red-400"
-  const viralBg = viralScore >= 70 ? "bg-green-900/20 border-green-500" : viralScore >= 40 ? "bg-yellow-900/20 border-yellow-500" : "bg-red-900/20 border-red-500"
+  const viralColor = viralScore >= 70 ? "text-black" : viralScore >= 40 ? "text-black" : "text-black"
+  const viralBg = viralScore >= 70 ? "bg-[#b5e550] border-black" : viralScore >= 40 ? "bg-[#ffe066] border-black" : "bg-[#ff6b6b] border-black text-white"
 
   const improvements = parseJSON(video.viralImprovements) || []
   const keyMoments = parseJSON(video.keyMoments) || []
@@ -183,29 +183,29 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
+    <div className="min-h-screen bg-[#f4f4f0] text-black font-satoshi selection:bg-[#ff6b6b] selection:text-white pb-32">
 
       {/* Header */}
-      <div className="border-b border-gray-800 px-6 py-4 sticky top-0 bg-gray-950/90 backdrop-blur z-10">
+      <div className="border-b-4 border-black px-6 py-4 sticky top-0 bg-white z-10 shadow-[0px_4px_0px_0px_rgba(0,0,0,1)]">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button onClick={() => router.push("/")} className="text-gray-400 hover:text-white text-sm">
+          <div className="flex items-center gap-4">
+            <button onClick={() => router.push("/")} className="font-cabinet font-black uppercase text-sm border-2 border-black rounded px-3 py-1.5 hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all bg-white text-black">
               ← Dashboard
             </button>
-            <span className="text-gray-700">/</span>
-            <h1 className="font-semibold text-white truncate max-w-xs">{video.title}</h1>
+            <span className="text-black font-cabinet font-black">/</span>
+            <h1 className="font-cabinet font-black text-2xl uppercase text-black truncate max-w-sm tracking-wide">{video.title}</h1>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={() => router.push(`/analytics/${id}`)}
-              className="text-sm text-gray-400 hover:text-white border border-gray-700 hover:border-gray-500 px-4 py-2 rounded-lg transition-colors"
+              className="text-sm font-cabinet font-black uppercase text-black bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] px-4 py-2 rounded transition-all"
             >
               📊 Analytics
             </button>
             <button
               onClick={handlePublish}
               disabled={published}
-              className="bg-purple-600 hover:bg-purple-700 disabled:bg-green-700 text-white px-5 py-2 rounded-lg font-medium transition-colors"
+              className={`text-sm font-cabinet font-black uppercase border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] px-5 py-2 rounded transition-all ${published ? "bg-[#b5e550] text-black cursor-not-allowed" : "bg-white hover:bg-[#ff6b6b] hover:text-white hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"}`}
             >
               {published ? "✅ Scheduled!" : "Approve & Schedule →"}
             </button>
@@ -215,42 +215,42 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
 
       {/* Published Banner */}
       {published && (
-        <div className="bg-green-900/30 border-b border-green-700 px-6 py-3 text-center text-green-300">
+        <div className="bg-[#b5e550] border-b-4 border-black px-6 py-3 text-center text-black font-cabinet font-black uppercase tracking-wide shadow-[0px_4px_0px_0px_rgba(0,0,0,1)]">
           🎉 Content approved and scheduled for posting across all selected platforms!
         </div>
       )}
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
           {/* Left Column */}
-          <div className="col-span-1 space-y-4">
+          <div className="col-span-1 space-y-6">
 
             {/* Viral Score */}
-            <div className={`border rounded-xl p-5 ${viralBg}`}>
-              <p className="text-xs text-gray-500 uppercase tracking-wider mb-3">AI Viral Score</p>
-              <div className={`text-6xl font-black ${viralColor}`}>{viralScore}</div>
-              <div className="text-gray-400 text-sm mb-3">out of 100</div>
-              <div className="w-full bg-gray-800 rounded-full h-2 mb-4">
+            <div className={`border-4 rounded shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 ${viralBg}`}>
+              <p className="text-sm text-black font-cabinet font-black uppercase tracking-wider mb-2 border-b-2 border-black pb-2">AI Viral Score</p>
+              <div className={`text-6xl font-cabinet font-black ${viralColor} drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]`}>{viralScore}</div>
+              <div className="text-black font-satoshi font-bold text-sm mb-4">OUT OF 100</div>
+              <div className="w-full bg-[#f4f4f0] border-2 border-black rounded h-4 mb-4 shadow-inner overflow-hidden">
                 <div
-                  className={`h-2 rounded-full transition-all ${viralScore >= 70 ? "bg-green-400" : viralScore >= 40 ? "bg-yellow-400" : "bg-red-400"}`}
+                  className={`h-full border-r-2 border-black transition-all ${viralScore >= 70 ? "bg-[#b5e550]" : viralScore >= 40 ? "bg-[#ffe066]" : "bg-[#ff6b6b]"}`}
                   style={{ width: `${viralScore}%` }}
                 />
               </div>
               {video.viralReasoning && (
-                <p className="text-gray-300 text-sm">{video.viralReasoning}</p>
+                <p className={`text-sm font-satoshi font-bold leading-relaxed ${viralScore < 40 ? "text-white" : "text-black"}`}>{video.viralReasoning}</p>
               )}
             </div>
 
             {/* Improvements */}
             {improvements.length > 0 && (
-              <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
-                <p className="text-xs text-gray-500 uppercase tracking-wider mb-3">💡 AI Suggestions</p>
-                <ul className="space-y-2">
+              <div className="bg-white border-4 border-black rounded shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5">
+                <p className="text-sm font-cabinet font-black uppercase tracking-wider mb-4 border-b-2 border-black pb-2">💡 AI Suggestions</p>
+                <ul className="space-y-3">
                   {improvements.map((tip: string, i: number) => (
-                    <li key={i} className="text-sm text-gray-300 flex gap-2">
-                      <span className="text-purple-400 mt-0.5">•</span>
+                    <li key={i} className="text-sm text-black font-satoshi font-medium flex gap-3">
+                      <span className="text-[#4dabf7] mt-0.5 font-bold">▶</span>
                       <span>{tip}</span>
                     </li>
                   ))}
@@ -260,11 +260,11 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
 
             {/* Hashtags */}
             {hashtagData.general && (
-              <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
-                <p className="text-xs text-gray-500 uppercase tracking-wider mb-3">🏷️ Hashtags</p>
+              <div className="bg-white border-4 border-black rounded shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5">
+                <p className="text-sm font-cabinet font-black uppercase tracking-wider mb-4 border-b-2 border-black pb-2">🏷️ Hashtags</p>
                 <div className="flex flex-wrap gap-2">
                   {[...(hashtagData.general || []), ...(hashtagData.niche || [])].map((tag: string, i: number) => (
-                    <span key={i} className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded-full">
+                    <span key={i} className="text-xs bg-white border-2 border-black text-black font-cabinet font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all px-2 py-1 rounded cursor-default uppercase">
                       #{tag.replace("#", "")}
                     </span>
                   ))}
@@ -274,14 +274,14 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
 
             {/* Key Moments */}
             {keyMoments.length > 0 && (
-              <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
-                <p className="text-xs text-gray-500 uppercase tracking-wider mb-3">⏱️ Key Moments</p>
-                <ul className="space-y-2">
+              <div className="bg-white border-4 border-black rounded shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5">
+                <p className="text-sm font-cabinet font-black uppercase tracking-wider mb-4 border-b-2 border-black pb-2">⏱️ Key Moments</p>
+                <ul className="space-y-3">
                   {keyMoments.map((moment: any, i: number) => (
-                    <li key={i} className="text-sm flex gap-2">
-                      <span className="text-purple-400 font-mono">{moment.timestamp}</span>
-                      <span className="text-gray-300">{moment.description}</span>
-                      {moment.clipWorthy && <span className="text-green-400 text-xs">📎</span>}
+                    <li key={i} className="text-sm flex gap-3 pb-3 border-b-2 border-gray-100 last:border-0 last:pb-0 items-start">
+                      <span className="text-white bg-black border-2 border-black rounded px-1.5 py-0.5 text-[10px] font-cabinet font-black shrink-0 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">{moment.timestamp}</span>
+                      <span className="text-black font-satoshi font-medium">{moment.description}</span>
+                      {moment.clipWorthy && <span className="text-xl shrink-0 drop-shadow-[1px_1px_0px_rgba(0,0,0,1)]" title="Clip Worthy">📎</span>}
                     </li>
                   ))}
                 </ul>
@@ -290,18 +290,18 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
           </div>
 
           {/* Right Column — Platform Tabs */}
-          <div className="col-span-2 space-y-4">
+          <div className="col-span-1 md:col-span-2 space-y-6">
 
             {/* Platform Tabs */}
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-3 flex-wrap">
               {PLATFORMS.map(platform => (
                 <button
                   key={platform}
                   onClick={() => setActiveTab(platform)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all
+                  className={`flex items-center gap-2 px-4 py-2 rounded text-sm font-cabinet font-black uppercase border-2 border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
                     ${activeTab === platform
-                      ? "bg-gray-700 text-white border border-gray-500"
-                      : "bg-gray-800/50 text-gray-400 hover:text-white border border-transparent"
+                      ? "bg-black text-white"
+                      : "bg-white text-black"
                     }`}
                 >
                   {PLATFORM_ICONS[platform]}
@@ -316,32 +316,32 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
               if (platform !== activeTab) return null
 
               return (
-                <div key={platform} className={`border rounded-xl p-5 space-y-4 ${PLATFORM_COLORS[platform]}`}>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">{PLATFORM_ICONS[platform]}</span>
-                    <h3 className="font-semibold capitalize text-lg">
+                <div key={platform} className={`border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded p-6 space-y-6 ${PLATFORM_COLORS[platform] || "bg-white"}`}>
+                  <div className="flex items-center gap-3 pb-4 border-b-4 border-black">
+                    <span className="text-3xl bg-white border-2 border-black rounded flex items-center justify-center w-12 h-12 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">{PLATFORM_ICONS[platform]}</span>
+                    <h3 className="font-cabinet font-black uppercase text-xl text-black">
                       {platform === "twitter" ? "X (Twitter)" : platform}
                     </h3>
-                    <span className="text-xs text-gray-500 ml-auto">✏️ Click any field to edit</span>
+                    <span className="text-[10px] font-cabinet font-bold text-black uppercase ml-auto bg-white border-2 border-black px-2 py-1 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">✏️ Click to edit</span>
                   </div>
 
                   {platform === "youtube" && content && (
                     <>
                       <div>
-                        <label className="text-xs text-gray-500 uppercase mb-1 block">Title</label>
+                        <label className="text-sm font-cabinet font-black text-black uppercase mb-2 block">Title</label>
                         <textarea
                           value={getEditableContent(platform, "title")}
                           onChange={e => setEditable(platform, "title", e.target.value)}
-                          className="w-full bg-gray-900/50 border border-gray-600 rounded-lg p-3 text-white text-sm resize-none focus:outline-none focus:border-purple-500"
+                          className="w-full bg-[#f4f4f0] border-2 border-black rounded p-3 text-black font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all shadow-inner"
                           rows={2}
                         />
                       </div>
                       <div>
-                        <label className="text-xs text-gray-500 uppercase mb-1 block">Description</label>
+                        <label className="text-sm font-cabinet font-black text-black uppercase mb-2 block">Description</label>
                         <textarea
                           value={getEditableContent(platform, "description")}
                           onChange={e => setEditable(platform, "description", e.target.value)}
-                          className="w-full bg-gray-900/50 border border-gray-600 rounded-lg p-3 text-white text-sm resize-none focus:outline-none focus:border-purple-500"
+                          className="w-full bg-[#f4f4f0] border-2 border-black rounded p-3 text-black font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all shadow-inner"
                           rows={6}
                         />
                       </div>
@@ -351,20 +351,20 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
                   {platform === "tiktok" && content && (
                     <>
                       <div>
-                        <label className="text-xs text-gray-500 uppercase mb-1 block">Caption</label>
+                        <label className="text-sm font-cabinet font-black text-black uppercase mb-2 block">Caption</label>
                         <textarea
                           value={getEditableContent(platform, "caption")}
                           onChange={e => setEditable(platform, "caption", e.target.value)}
-                          className="w-full bg-gray-900/50 border border-gray-600 rounded-lg p-3 text-white text-sm resize-none focus:outline-none focus:border-purple-500"
+                          className="w-full bg-[#f4f4f0] border-2 border-black rounded p-3 text-black font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all shadow-inner"
                           rows={3}
                         />
                       </div>
                       {content.hooks && (
                         <div>
-                          <label className="text-xs text-gray-500 uppercase mb-2 block">Hook Options</label>
-                          <div className="space-y-2">
+                          <label className="text-sm font-cabinet font-black text-black uppercase mb-2 block">Hook Options</label>
+                          <div className="space-y-3">
                             {content.hooks.map((hook: string, i: number) => (
-                              <div key={i} className="bg-gray-900/50 border border-gray-600 rounded-lg p-3 text-sm text-gray-300">
+                              <div key={i} className="bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded p-3 text-sm font-satoshi font-bold text-black">
                                 {hook}
                               </div>
                             ))}
@@ -377,20 +377,20 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
                   {platform === "instagram" && content && (
                     <>
                       <div>
-                        <label className="text-xs text-gray-500 uppercase mb-1 block">Caption</label>
+                        <label className="text-sm font-cabinet font-black text-black uppercase mb-2 block">Caption</label>
                         <textarea
                           value={getEditableContent(platform, "caption")}
                           onChange={e => setEditable(platform, "caption", e.target.value)}
-                          className="w-full bg-gray-900/50 border border-gray-600 rounded-lg p-3 text-white text-sm resize-none focus:outline-none focus:border-purple-500"
+                          className="w-full bg-[#f4f4f0] border-2 border-black rounded p-3 text-black font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all shadow-inner"
                           rows={5}
                         />
                       </div>
                       <div>
-                        <label className="text-xs text-gray-500 uppercase mb-1 block">Reels Caption</label>
+                        <label className="text-sm font-cabinet font-black text-black uppercase mb-2 block">Reels Caption</label>
                         <textarea
                           value={getEditableContent(platform, "reels_caption")}
                           onChange={e => setEditable(platform, "reels_caption", e.target.value)}
-                          className="w-full bg-gray-900/50 border border-gray-600 rounded-lg p-3 text-white text-sm resize-none focus:outline-none focus:border-purple-500"
+                          className="w-full bg-[#f4f4f0] border-2 border-black rounded p-3 text-black font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all shadow-inner"
                           rows={2}
                         />
                       </div>
@@ -399,14 +399,14 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
 
                   {platform === "twitter" && content && (
                     <div>
-                      <label className="text-xs text-gray-500 uppercase mb-1 block">Tweet</label>
+                      <label className="text-sm font-cabinet font-black text-black uppercase mb-2 block">Tweet</label>
                       <textarea
                         value={getEditableContent(platform, "tweet")}
                         onChange={e => setEditable(platform, "tweet", e.target.value)}
-                        className="w-full bg-gray-900/50 border border-gray-600 rounded-lg p-3 text-white text-sm resize-none focus:outline-none focus:border-purple-500"
+                        className="w-full bg-[#f4f4f0] border-2 border-black rounded p-3 text-black font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all shadow-inner"
                         rows={3}
                       />
-                      <div className="text-xs text-gray-500 text-right mt-1">
+                      <div className="text-xs font-cabinet font-black text-black uppercase text-right mt-2">
                         {getEditableContent(platform, "tweet").length}/280
                       </div>
                     </div>
@@ -414,18 +414,18 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
 
                   {platform === "linkedin" && content && (
                     <div>
-                      <label className="text-xs text-gray-500 uppercase mb-1 block">Post</label>
+                      <label className="text-sm font-cabinet font-black text-black uppercase mb-2 block">Post</label>
                       <textarea
                         value={getEditableContent(platform, "post")}
                         onChange={e => setEditable(platform, "post", e.target.value)}
-                        className="w-full bg-gray-900/50 border border-gray-600 rounded-lg p-3 text-white text-sm resize-none focus:outline-none focus:border-purple-500"
+                        className="w-full bg-[#f4f4f0] border-2 border-black rounded p-3 text-black font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all shadow-inner"
                         rows={7}
                       />
                     </div>
                   )}
 
                   {!content && (
-                    <div className="text-center py-8 text-gray-500">
+                    <div className="text-center py-12 bg-[#f4f4f0] border-4 border-black border-dashed rounded text-black font-cabinet font-black uppercase shadow-inner">
                       <p>Content not available. Try reprocessing.</p>
                     </div>
                   )}

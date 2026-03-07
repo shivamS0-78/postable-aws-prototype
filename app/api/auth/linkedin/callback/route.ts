@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from "next/server"
 import { saveConnectedAccount } from "@/lib/dynamo-accounts"
+import { getUserSession } from "@/lib/auth"
 
 export async function GET(req: NextRequest) {
-    const code = req.nextUrl.searchParams.get("code")
+    const session = await getUserSession()
+    if (!session || !session.userId) {
+        return NextResponse.redirect(new URL("/login", req.url))
+    }
+    const userId = session.userId as string
+
+    const searchParams = req.nextUrl.searchParams
+    const code = searchParams.get("code")
     const error = req.nextUrl.searchParams.get("error")
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
 
@@ -52,7 +60,7 @@ export async function GET(req: NextRequest) {
             // Fallback
         }
 
-        await saveConnectedAccount({
+        await saveConnectedAccount(userId, {
             platform: "linkedin",
             accessToken: tokens.access_token,
             tokenExpiry: tokens.expires_in
