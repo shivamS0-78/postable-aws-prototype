@@ -36,26 +36,26 @@ export default function TrendsPage() {
   }
 
   const urgencyColor: any = {
-    high: "bg-[#ff6b6b] text-white border-black",
-    medium: "bg-[#ffe066] text-black border-black",
-    low: "bg-[#b5e550] text-black border-black"
+    high: "bg-[#ff6b6b] text-white border-main",
+    medium: "bg-[#ffe066] text-black border-main",
+    low: "bg-[#b5e550] text-black border-main"
   }
 
   return (
-    <div className="min-h-screen bg-[#f4f4f0] text-black font-satoshi pb-32">
+    <div className="min-h-screen bg-page text-main font-satoshi pb-32">
       <div className="max-w-4xl mx-auto px-6 py-8 space-y-8">
-        <div className="flex items-center justify-between border-b-4 border-black pb-4">
+        <div className="flex items-center justify-between border-b-4 border-main pb-4">
           <div className="flex items-center gap-3">
             <span className="text-4xl">🔥</span>
             <h1 className="text-4xl font-black font-cabinet uppercase tracking-wide">AI Trend Detection</h1>
           </div>
-          <span className="text-xs font-cabinet font-black text-black uppercase bg-[#b5e550] px-3 py-1.5 rounded border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <span className="text-xs font-cabinet font-black text-black uppercase bg-[#b5e550] px-3 py-1.5 rounded border-2 border-main shadow-[2px_2px_0px_0px_var(--shadow-main)]">
             Powered by Amazon Bedrock
           </span>
         </div>
         {/* Search */}
-        <div className="bg-white border-4 border-black rounded shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8">
-          <h2 className="font-cabinet font-black uppercase tracking-wider text-xl mb-6 text-black border-b-2 border-black pb-2">Discover What's Trending in Your Niche</h2>
+        <div className="bg-card border-4 border-main rounded shadow-[8px_8px_0px_0px_var(--shadow-main)] p-8">
+          <h2 className="font-cabinet font-black uppercase tracking-wider text-xl mb-6 text-black border-b-2 border-main pb-2">Discover What's Trending in Your Niche</h2>
           <div className="flex flex-col sm:flex-row gap-4">
             <input
               type="text"
@@ -63,12 +63,12 @@ export default function TrendsPage() {
               onChange={e => setNiche(e.target.value)}
               onKeyDown={e => e.key === "Enter" && fetchTrends()}
               placeholder="Enter your niche (e.g. fitness, cooking, tech, gaming...)"
-              className="flex-1 bg-[#f4f4f0] border-2 border-black rounded p-4 text-black font-satoshi font-bold focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all shadow-inner placeholder:text-gray-500"
+              className="flex-1 bg-page border-2 border-main rounded p-4 text-black font-satoshi font-bold focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner placeholder:text-gray-500"
             />
             <button
               onClick={fetchTrends}
               disabled={loading}
-              className={`font-cabinet font-black uppercase border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-8 py-4 rounded transition-all text-lg ${loading ? "bg-gray-200 text-gray-500 cursor-not-allowed" : "bg-[#4dabf7] text-white hover:-translate-y-[2px] hover:-translate-x-[2px] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]"}`}
+              className={`font-cabinet font-black uppercase border-2 border-main shadow-[4px_4px_0px_0px_var(--shadow-main)] px-8 py-4 rounded transition-all text-lg ${loading ? "bg-gray-200 text-gray-500 cursor-not-allowed" : "bg-[#4dabf7] text-white hover:-translate-y-[2px] hover:-translate-x-[2px] hover:shadow-[6px_6px_0px_0px_var(--shadow-main)]"}`}
             >
               {loading ? "Analyzing..." : "Analyze Trends 🔍"}
             </button>
@@ -82,7 +82,7 @@ export default function TrendsPage() {
                   <button
                     key={p}
                     onClick={() => togglePlatform(p)}
-                    className={`font-cabinet font-bold uppercase border-2 border-black px-4 py-2 rounded transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] ${isSelected ? "bg-[#b5e550] text-black" : "bg-white text-gray-400 opacity-60 hover:opacity-100"
+                    className={`font-cabinet font-bold uppercase border-2 border-main px-4 py-2 rounded transition-all shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_var(--shadow-main)] ${isSelected ? "bg-[#b5e550] text-black" : "bg-card text-gray-400 opacity-60 hover:opacity-100"
                       }`}
                   >
                     {p} {isSelected && "✓"}
@@ -95,8 +95,8 @@ export default function TrendsPage() {
         </div>
 
         {loading && (
-          <div className="text-center py-12 bg-white border-4 border-black border-dashed rounded shadow-inner">
-            <div className="w-12 h-12 border-4 border-black border-t-[#4dabf7] rounded-full animate-spin mx-auto mb-4" />
+          <div className="text-center py-12 bg-card border-4 border-main border-dashed rounded shadow-inner">
+            <div className="w-12 h-12 border-4 border-main border-t-[#4dabf7] rounded-full animate-spin mx-auto mb-4" />
             <p className="text-black font-cabinet font-black uppercase">Amazon Bedrock is analyzing trends...</p>
           </div>
         )}
@@ -104,16 +104,16 @@ export default function TrendsPage() {
         {data && !loading && (
           <div className="space-y-8">
             {/* Summary */}
-            <div className="bg-[#ffe066] border-4 border-black rounded shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+            <div className="bg-[#ffe066] border-4 border-main rounded shadow-[4px_4px_0px_0px_var(--shadow-main)] p-6">
               <p className="text-black font-satoshi font-bold leading-relaxed">{data.summary}</p>
               <div className="flex gap-4 mt-4 mb-2 text-sm font-cabinet font-black uppercase">
-                <span className="text-black bg-white border-2 border-black px-3 py-1.5 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                <span className="text-black bg-card border-2 border-main px-3 py-1.5 rounded shadow-[2px_2px_0px_0px_var(--shadow-main)]">
                   Best Platform: <span className="text-[#ff6b6b]">{data.bestPlatform}</span>
                 </span>
               </div>
-              <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t-2 border-black/10">
+              <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t-2 border-main/10">
                 {(data.topHashtags || []).map((tag: string, i: number) => (
-                  <span key={i} className="text-xs bg-white text-black border-2 border-black font-cabinet font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] px-2 py-1 rounded cursor-default uppercase">
+                  <span key={i} className="text-xs bg-card text-black border-2 border-main font-cabinet font-bold shadow-[2px_2px_0px_0px_var(--shadow-main)] px-2 py-1 rounded cursor-default uppercase">
                     #{tag.replace("#", "")}
                   </span>
                 ))}
@@ -123,20 +123,20 @@ export default function TrendsPage() {
             {/* Trend Cards */}
             <div className="grid grid-cols-1 gap-6">
               {(data.trends || []).map((trend: any, i: number) => (
-                <div key={i} className="bg-white border-4 border-black rounded shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 hover:-translate-y-[2px] hover:-translate-x-[2px] hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] transition-all">
-                  <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 border-b-4 border-black pb-4 gap-4">
+                <div key={i} className="bg-card border-4 border-main rounded shadow-[8px_8px_0px_0px_var(--shadow-main)] p-6 hover:-translate-y-[2px] hover:-translate-x-[2px] hover:shadow-[10px_10px_0px_0px_var(--shadow-main)] transition-all">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 border-b-4 border-main pb-4 gap-4">
                     <div>
                       <h3 className="font-cabinet font-black uppercase text-xl text-black mb-1">{trend.topic}</h3>
-                      <span className="text-xs font-satoshi font-bold text-gray-500 uppercase tracking-widest bg-[#f4f4f0] border-2 border-black px-2 py-0.5 rounded shadow-inner">{trend.platform}</span>
+                      <span className="text-xs font-satoshi font-bold text-gray-500 uppercase tracking-widest bg-page border-2 border-main px-2 py-0.5 rounded shadow-inner">{trend.platform}</span>
                     </div>
                     <div className="flex items-center gap-4">
-                      <div className="text-right bg-black text-white border-2 border-black rounded px-3 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                        <div className={`text-2xl font-cabinet font-black drop-shadow-[1px_1px_0px_rgba(0,0,0,1)] ${trend.growth >= 70 ? "text-[#b5e550]" : trend.growth >= 40 ? "text-[#ffe066]" : "text-white"}`}>
+                      <div className="text-right bg-black text-white border-2 border-main rounded px-3 py-1 shadow-[2px_2px_0px_0px_var(--shadow-main)]">
+                        <div className={`text-2xl font-cabinet font-black drop-shadow-[1px_1px_0px_var(--shadow-main)] ${trend.growth >= 70 ? "text-[#b5e550]" : trend.growth >= 40 ? "text-[#ffe066]" : "text-white"}`}>
                           +{trend.growth}%
                         </div>
                         <div className="text-[10px] uppercase font-bold tracking-wider">growth</div>
                       </div>
-                      <span className={`text-xs font-cabinet font-black uppercase px-3 py-1.5 rounded border-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ${urgencyColor[trend.urgency] || urgencyColor.medium}`}>
+                      <span className={`text-xs font-cabinet font-black uppercase px-3 py-1.5 rounded border-2 shadow-[2px_2px_0px_0px_var(--shadow-main)] ${urgencyColor[trend.urgency] || urgencyColor.medium}`}>
                         {trend.urgency} Urgency
                       </span>
                     </div>

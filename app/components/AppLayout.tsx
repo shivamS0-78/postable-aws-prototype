@@ -28,7 +28,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     }
 
     return (
-        <div className="flex flex-col h-screen bg-[#f4f4f0] selection:bg-[#ff6b6b] selection:text-white overflow-hidden">
+        <div className="flex flex-col h-screen bg-page selection:bg-[#ff6b6b] selection:text-white overflow-hidden">
             <TopNav toggleSidebar={() => setIsOpen(!isOpen)} />
             <div className="flex flex-1 overflow-hidden relative">
                 <Sidebar isOpen={isOpen} isMobile={isMobile} />

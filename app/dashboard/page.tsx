@@ -66,7 +66,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f4f4f0] text-black font-satoshi selection:bg-[#ff6b6b] selection:text-white">
+    <div className="min-h-screen bg-page text-main font-satoshi selection:bg-[#ff6b6b] selection:text-white">
 
 
       <div className="max-w-6xl mx-auto px-6 py-8 space-y-8">
@@ -77,7 +77,7 @@ export default function Dashboard() {
             { label: "AI Processed", value: stats.ready, icon: "✅" },
             { label: "Avg Viral Score", value: stats.avgScore ? `${stats.avgScore}/100` : "—", icon: "🔥" },
           ].map((stat) => (
-            <div key={stat.label} className="bg-white border-4 border-black rounded p-5 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+            <div key={stat.label} className="bg-card border-4 border-main rounded p-5 shadow-[6px_6px_0px_0px_var(--shadow-main)]">
               <div className="text-4xl mb-3">{stat.icon}</div>
               <div className="text-4xl font-black font-cabinet mb-1">{stat.value}</div>
               <div className="text-gray-600 font-bold tracking-wide uppercase text-sm">{stat.label}</div>
@@ -87,17 +87,17 @@ export default function Dashboard() {
 
         {/* Videos List */}
         <div>
-          <h2 className="text-2xl font-black font-cabinet mb-6 uppercase border-b-4 border-black pb-2 inline-block">Your Videos</h2>
+          <h2 className="text-2xl font-black font-cabinet mb-6 uppercase border-b-4 border-main pb-2 inline-block">Your Videos</h2>
 
           {loading ? (
             <div className="text-center py-20 font-cabinet font-bold text-xl uppercase animate-pulse">Loading Database...</div>
           ) : videos.length === 0 ? (
-            <div className="text-center py-20 bg-white border-4 border-black border-dashed rounded shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+            <div className="text-center py-20 bg-card border-4 border-main border-dashed rounded shadow-[8px_8px_0px_0px_var(--shadow-main)]">
               <div className="text-6xl mb-6">🎬</div>
               <p className="font-cabinet font-bold text-xl mb-6 uppercase">No videos yet. Upload your first one!</p>
               <button
                 onClick={() => router.push("/upload")}
-                className="bg-[#b5e550] border-2 border-black text-black font-cabinet font-black uppercase tracking-wide px-8 py-4 rounded shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                className="bg-[#b5e550] border-2 border-main text-black font-cabinet font-black uppercase tracking-wide px-8 py-4 rounded shadow-[4px_4px_0px_0px_var(--shadow-main)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all"
               >
                 Let's Go →
               </button>
@@ -110,10 +110,10 @@ export default function Dashboard() {
                   <div
                     key={video.id}
                     onClick={() => router.push(`/video/${video.id}`)}
-                    className="bg-white border-4 border-black rounded p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] cursor-pointer hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-between group"
+                    className="bg-card border-4 border-main rounded p-5 shadow-[4px_4px_0px_0px_var(--shadow-main)] cursor-pointer hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_0px_var(--shadow-main)] transition-all flex items-center justify-between group"
                   >
                     <div className="flex items-center gap-6">
-                      <div className="w-16 h-16 bg-[#ff6b6b] border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded-lg flex items-center justify-center text-3xl">
+                      <div className="w-16 h-16 bg-[#ff6b6b] border-2 border-main shadow-[2px_2px_0px_0px_var(--shadow-main)] rounded-lg flex items-center justify-center text-3xl">
                         🎬
                       </div>
                       <div>
@@ -125,7 +125,7 @@ export default function Dashboard() {
                     </div>
                     <div className="flex items-center gap-6">
                       {video.viralScore && (
-                        <div className="text-center border-r-2 border-black pr-6">
+                        <div className="text-center border-r-2 border-main pr-6">
                           <div className={`text-2xl font-black font-cabinet ${video.viralScore >= 70 ? "text-green-600" :
                             video.viralScore >= 40 ? "text-yellow-600" : "text-red-600"
                             }`}>
@@ -136,13 +136,13 @@ export default function Dashboard() {
                       )}
 
                       {/* Note: I'm leaving the status colors slightly muted to contrast with the stark black/white */}
-                      <div className={`flex items-center gap-2 px-4 py-2 border-2 border-black rounded font-bold uppercase text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-white`}>
+                      <div className={`flex items-center gap-2 px-4 py-2 border-2 border-main rounded font-bold uppercase text-xs shadow-[2px_2px_0px_0px_var(--shadow-main)] bg-card`}>
                         {status.label}
                       </div>
                       <button
                         onClick={(e) => handleDelete(e, video.id)}
                         disabled={deletingId === video.id}
-                        className="p-3 bg-white border-2 border-black rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-black hover:bg-[#ff6b6b] hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed group-hover:scale-110"
+                        className="p-3 bg-card border-2 border-main rounded shadow-[2px_2px_0px_0px_var(--shadow-main)] text-black hover:bg-[#ff6b6b] hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed group-hover:scale-110"
                         title="Delete video"
                       >
                         {deletingId === video.id ? (
@@ -166,7 +166,7 @@ export default function Dashboard() {
         </div>
 
         {/* AWS Badge */}
-        <div className="bg-white border-4 border-black rounded p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center font-cabinet font-bold uppercase text-sm">
+        <div className="bg-card border-4 border-main rounded p-4 shadow-[4px_4px_0px_0px_var(--shadow-main)] text-center font-cabinet font-bold uppercase text-sm">
           🏗️ Built on AWS: S3 (Storage) • DynamoDB (Database) • Bedrock/Claude (AI) • Transcribe (Speech-to-Text) • Lambda (Processing) • Amplify (Hosting)
         </div>
       </div>

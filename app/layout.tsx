@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SchedulerDaemon from "./components/SchedulerDaemon";
 import AppLayout from "./components/AppLayout";
+import { DarkModeProvider } from "./components/DarkModeContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,13 +27,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <AppLayout>
-          {children}
-        </AppLayout>
-        <SchedulerDaemon />
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <DarkModeProvider>
+          <AppLayout>
+            {children}
+          </AppLayout>
+          <SchedulerDaemon />
+        </DarkModeProvider>
       </body>
     </html>
   );
