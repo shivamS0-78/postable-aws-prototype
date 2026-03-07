@@ -44,10 +44,10 @@ export default function Sidebar({ isOpen, isMobile }: { isOpen: boolean, isMobil
 
     return (
         <div
-            className={`shrink-0 bg-white border-r-4 border-black transition-all duration-300 ease-in-out overflow-hidden flex flex-col z-30
+            className={`shrink-0 bg-card border-r-4 border-main transition-all duration-300 ease-in-out overflow-hidden flex flex-col z-30
             ${isMobile
-                    ? `absolute top-0 bottom-0 left-0 shadow-[4px_0px_0px_0px_rgba(0,0,0,1)] ${isOpen ? "w-64" : "w-0 border-r-0"}`
-                    : `${isOpen ? "w-64" : "w-[88px]"} shadow-[4px_0px_0px_0px_rgba(0,0,0,1)]`
+                    ? `absolute top-0 bottom-0 left-0 shadow-[4px_0px_0px_0px_var(--shadow-main)] ${isOpen ? "w-64" : "w-0 border-r-0"}`
+                    : `${isOpen ? "w-64" : "w-[88px]"} shadow-[4px_0px_0px_0px_var(--shadow-main)]`
                 }`}
         >
             <div className="flex-1 p-4 space-y-4 overflow-y-auto">
@@ -61,11 +61,11 @@ export default function Sidebar({ isOpen, isMobile }: { isOpen: boolean, isMobil
                             key={item.href}
                             onClick={() => router.push(item.href)}
                             title={isOpen ? "" : item.label}
-                            className={`flex justify-center items-center px-3 py-3 border-2 border-black rounded transition-all font-cabinet font-bold uppercase tracking-wide
+                            className={`flex justify-center items-center px-3 py-3 border-2 border-main rounded transition-all font-cabinet font-bold uppercase tracking-wide
                             ${!isOpen && !isMobile ? "w-[48px]" : "w-full justify-start"}
                             ${isActive
-                                    ? "bg-[#b5e550] text-black shadow-[inset_2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-[#a4d440]"
-                                    : "bg-white text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
+                                    ? "bg-[#b5e550] text-main shadow-[inset_2px_2px_0px_0px_var(--shadow-main)] hover:bg-[#a4d440]"
+                                    : "bg-card text-main shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_var(--shadow-main)]"
                                 }`}
                         >
                             <span className={`text-xl ${!isOpen && !isMobile ? "w-full text-center" : "w-8 text-center"}`}>
@@ -79,15 +79,15 @@ export default function Sidebar({ isOpen, isMobile }: { isOpen: boolean, isMobil
                 })}
             </div>
 
-            <div className={`p-4 border-t-4 border-black bg-[#f4f4f0] flex flex-col gap-3 justify-center items-center overflow-hidden`}>
+            <div className={`p-4 border-t-4 border-main bg-page flex flex-col gap-3 justify-center items-center overflow-hidden`}>
                 {(isOpen || isMobile) ? (
                     <div className="w-full">
-                        <div className="font-cabinet font-black text-black bg-white border-2 border-black p-2 rounded shadow-inner truncate text-xs mb-3 text-center" title={userEmail}>
+                        <div className="font-cabinet font-black text-main bg-card border-2 border-main p-2 rounded shadow-inner truncate text-xs mb-3 text-center" title={userEmail}>
                             {userEmail}
                         </div>
                         <button
                             onClick={handleLogout}
-                            className="w-full flex items-center justify-center gap-2 bg-[#ff6b6b] border-2 border-black text-white font-cabinet font-bold uppercase px-3 py-2 rounded shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            className="w-full flex items-center justify-center gap-2 bg-[#ff6b6b] border-2 border-main text-white font-cabinet font-bold uppercase px-3 py-2 rounded shadow-[3px_3px_0px_0px_var(--shadow-main)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[1px_1px_0px_0px_var(--shadow-main)] transition-all"
                         >
                             <span>🚪</span> Logout
                         </button>
@@ -96,7 +96,7 @@ export default function Sidebar({ isOpen, isMobile }: { isOpen: boolean, isMobil
                     <button
                         onClick={handleLogout}
                         title={`Logout (${userEmail})`}
-                        className="w-[48px] h-[48px] flex items-center justify-center bg-[#ff6b6b] border-2 border-black rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all text-white text-xl"
+                        className="w-[48px] h-[48px] flex items-center justify-center bg-[#ff6b6b] border-2 border-main rounded shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_var(--shadow-main)] transition-all text-white text-xl"
                     >
                         🚪
                     </button>

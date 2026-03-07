@@ -43,11 +43,11 @@ export default function LoginPage() {
     }
 
     // Neo-brutalist shared classes
-    const inputClass = "w-full p-4 bg-white border-2 border-black rounded shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus:outline-none focus:translate-y-1 focus:translate-x-1 focus:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] transition-all font-satoshi font-medium text-black placeholder:text-gray-400"
-    const buttonClass = "w-full p-4 bg-[#b5e550] border-2 border-black rounded shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:translate-x-1 hover:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] transition-all font-cabinet font-black text-black uppercase tracking-wide disabled:opacity-50"
+    const inputClass = "w-full p-4 bg-card border-2 border-main rounded shadow-[4px_4px_0px_0px_var(--shadow-main)] focus:outline-none focus:translate-y-1 focus:translate-x-1 focus:shadow-[0px_0px_0px_0px_var(--shadow-main)] transition-all font-satoshi font-medium text-main placeholder:text-gray-400"
+    const buttonClass = "w-full p-4 bg-[#b5e550] border-2 border-main rounded shadow-[4px_4px_0px_0px_var(--shadow-main)] hover:translate-y-1 hover:translate-x-1 hover:shadow-[0px_0px_0px_0px_var(--shadow-main)] transition-all font-cabinet font-black text-main uppercase tracking-wide disabled:opacity-50"
 
     return (
-        <div className="min-h-screen bg-[#f4f4f0] text-black flex items-center justify-center p-6 selection:bg-[#ff6b6b] selection:text-white">
+        <div className="min-h-screen bg-page text-main flex items-center justify-center p-6 selection:bg-[#ff6b6b] selection:text-white">
             {/* Background Decor */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
                 <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-[#ff6b6b] blur-[100px]" />
@@ -67,7 +67,7 @@ export default function LoginPage() {
                 </div>
 
                 {/* LOGIN CARD */}
-                <div className="bg-[#fff] border-4 border-black p-8 rounded shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
+                <div className="bg-[#fff] border-4 border-main p-8 rounded shadow-[12px_12px_0px_0px_var(--shadow-main)]">
                     <div className="mb-8">
                         <h1 className="font-cabinet font-black text-3xl mb-2">WELCOME BACK.</h1>
                         <p className="font-satoshi text-gray-600 font-medium leading-relaxed">
@@ -101,7 +101,7 @@ export default function LoginPage() {
                         </div>
 
                         {error && (
-                            <div className="p-4 bg-[#ff6b6b] border-2 border-black rounded text-white font-satoshi font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                            <div className="p-4 bg-[#ff6b6b] border-2 border-main rounded text-white font-satoshi font-bold shadow-[2px_2px_0px_0px_var(--shadow-main)]">
                                 {error}
                             </div>
                         )}
@@ -115,7 +115,7 @@ export default function LoginPage() {
                         </button>
                     </form>
 
-                    <div className="mt-8 pt-6 border-t-2 border-black/10 text-center font-satoshi font-medium text-gray-500">
+                    <div className="mt-8 pt-6 border-t-2 border-main/10 text-center font-satoshi font-medium text-gray-500">
                         For demonstration, any mock email and password combination will succeed and generate a unique user session.
                     </div>
                 </div>

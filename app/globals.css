@@ -80,9 +80,26 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Custom Postable Variables */
+  --page-bg: #f4f4f0;
+  --card-bg: #ffffff;
+  --text-main: #000000;
+  --text-secondary: #4b5563;
+  --border-main: #000000;
+  --shadow-main: rgba(0, 0, 0, 1);
+  --input-bg: #f4f4f0;
 }
 
 .dark {
+  --page-bg: #111827;
+  --card-bg: #1f2937;
+  --text-main: #f9fafb;
+  --text-secondary: #9ca3af;
+  --border-main: #000000;
+  --shadow-main: #000000;
+  --input-bg: #374151;
+
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -122,6 +139,33 @@
   }
 
   body {
-    @apply bg-[#f4f4f0] text-black;
+    background-color: var(--page-bg);
+    color: var(--text-main);
+  }
+}
+
+@layer utilities {
+  .bg-page {
+    background-color: var(--page-bg);
+  }
+
+  .bg-card {
+    background-color: var(--card-bg);
+  }
+
+  .text-main {
+    color: var(--text-main);
+  }
+
+  .text-secondary {
+    color: var(--text-secondary);
+  }
+
+  .border-main {
+    border-color: var(--border-main);
+  }
+
+  .bg-input {
+    background-color: var(--input-bg);
   }
 }
