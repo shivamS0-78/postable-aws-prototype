@@ -96,8 +96,8 @@
   --card-bg: #1f2937;
   --text-main: #f9fafb;
   --text-secondary: #9ca3af;
-  --border-main: #ffffff;
-  --shadow-main: #ffffff;
+  --border-main: #000000;
+  --shadow-main: #000000;
   --input-bg: #374151;
 
   --background: oklch(0.145 0 0);

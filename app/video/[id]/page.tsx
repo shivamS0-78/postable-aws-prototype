@@ -25,11 +25,11 @@ interface Video {
 
 const PLATFORMS = ["youtube", "tiktok", "instagram", "twitter", "linkedin"]
 const PLATFORM_ICONS: any = {
-  youtube: "🎬",
+  youtube: "/logos/youtube.png",
   tiktok: "🎵",
-  instagram: "📸",
+  instagram: "/logos/instagram.png",
   twitter: "🐦",
-  linkedin: "💼"
+  linkedin: "/logos/linkedin.png"
 }
 const PLATFORM_COLORS: any = {
   youtube: "bg-[#ff6b6b]",
@@ -125,11 +125,11 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
             <div className="absolute inset-0 flex items-center justify-center text-3xl">🤖</div>
           </div>
           <div>
-            <h2 className="text-3xl font-cabinet font-black uppercase text-black mb-2 tracking-wide">AI is Working...</h2>
+            <h2 className="text-3xl font-cabinet font-black uppercase text-main mb-2 tracking-wide">AI is Working...</h2>
             <p className="text-[#4dabf7] font-cabinet font-bold uppercase">{processingStage}</p>
           </div>
           <div className="bg-page border-4 border-main rounded p-4 text-left space-y-3 shadow-inner">
-            <p className="text-xs text-black font-cabinet font-black uppercase tracking-wider border-b-2 border-main pb-2">AWS Services Active</p>
+            <p className="text-xs text-main font-cabinet font-black uppercase tracking-wider border-b-2 border-main pb-2">AWS Services Active</p>
             {[
               { service: "Amazon S3", job: "Video stored ✅" },
               { service: "Amazon Transcribe", job: "Converting audio to text..." },
@@ -138,7 +138,7 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
             ].map(item => (
               <div key={item.service} className="flex flex-col sm:flex-row sm:justify-between text-xs sm:text-sm font-satoshi font-bold">
                 <span className="text-gray-500 uppercase">{item.service}</span>
-                <span className="text-black">{item.job}</span>
+                <span className="text-main">{item.job}</span>
               </div>
             ))}
           </div>
@@ -155,7 +155,7 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
   )
 
   const viralScore = video.viralScore || 0
-  const viralColor = viralScore >= 70 ? "text-black" : viralScore >= 40 ? "text-black" : "text-black"
+  const viralColor = viralScore >= 70 ? "text-main" : viralScore >= 40 ? "text-main" : "text-main"
   const viralBg = viralScore >= 70 ? "bg-[#b5e550] border-main" : viralScore >= 40 ? "bg-[#ffe066] border-main" : "bg-[#ff6b6b] border-main text-white"
 
   const improvements = parseJSON(video.viralImprovements) || []
@@ -190,19 +190,19 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-4 border-main pb-4 mb-6">
           <div className="flex items-center gap-3">
             <span className="text-4xl">🎬</span>
-            <h1 className="text-4xl font-black font-cabinet uppercase text-black truncate max-w-2xl tracking-wide">{video.title}</h1>
+            <h1 className="text-4xl font-black font-cabinet uppercase text-main truncate max-w-2xl tracking-wide">{video.title}</h1>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={() => router.push(`/analytics/${id}`)}
-              className="text-sm font-cabinet font-black uppercase text-black bg-card border-2 border-main shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_var(--shadow-main)] px-4 py-3 rounded transition-all"
+              className="text-sm font-cabinet font-black uppercase text-main bg-card border-2 border-main shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_var(--shadow-main)] px-4 py-3 rounded transition-all"
             >
               📊 Analytics
             </button>
             <button
               onClick={handlePublish}
               disabled={published}
-              className={`text-sm font-cabinet font-black uppercase border-2 border-main shadow-[2px_2px_0px_0px_var(--shadow-main)] px-5 py-3 rounded transition-all ${published ? "bg-[#b5e550] text-black cursor-not-allowed" : "bg-card hover:bg-[#ff6b6b] hover:text-white hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_var(--shadow-main)]"}`}
+              className={`text-sm font-cabinet font-black uppercase border-2 border-main shadow-[2px_2px_0px_0px_var(--shadow-main)] px-5 py-3 rounded transition-all ${published ? "bg-[#b5e550] text-main cursor-not-allowed" : "bg-card hover:bg-[#ff6b6b] hover:text-white hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_var(--shadow-main)]"}`}
             >
               {published ? "✅ Scheduled!" : "Approve & Schedule →"}
             </button>
@@ -211,7 +211,7 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
 
         {/* Published Banner */}
         {published && (
-          <div className="mb-6 bg-[#b5e550] border-4 border-main p-4 rounded text-center text-black font-cabinet font-black uppercase tracking-wide shadow-[4px_4px_0px_0px_var(--shadow-main)]">
+          <div className="mb-6 bg-[#b5e550] border-4 border-main p-4 rounded text-center text-main font-cabinet font-black uppercase tracking-wide shadow-[4px_4px_0px_0px_var(--shadow-main)]">
             🎉 Content approved and scheduled for posting across all selected platforms!
           </div>
         )}
@@ -222,9 +222,9 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
 
             {/* Viral Score */}
             <div className={`border-4 rounded shadow-[8px_8px_0px_0px_var(--shadow-main)] p-6 ${viralBg}`}>
-              <p className="text-sm text-black font-cabinet font-black uppercase tracking-wider mb-2 border-b-2 border-main pb-2">AI Viral Score</p>
+              <p className="text-sm text-main font-cabinet font-black uppercase tracking-wider mb-2 border-b-2 border-main pb-2">AI Viral Score</p>
               <div className={`text-6xl font-cabinet font-black ${viralColor} drop-shadow-[2px_2px_0px_var(--shadow-main)]`}>{viralScore}</div>
-              <div className="text-black font-satoshi font-bold text-sm mb-4">OUT OF 100</div>
+              <div className="text-main font-satoshi font-bold text-sm mb-4">OUT OF 100</div>
               <div className="w-full bg-page border-2 border-main rounded h-4 mb-4 shadow-inner overflow-hidden">
                 <div
                   className={`h-full border-r-2 border-main transition-all ${viralScore >= 70 ? "bg-[#b5e550]" : viralScore >= 40 ? "bg-[#ffe066]" : "bg-[#ff6b6b]"}`}
@@ -232,7 +232,7 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
                 />
               </div>
               {video.viralReasoning && (
-                <p className={`text-sm font-satoshi font-bold leading-relaxed ${viralScore < 40 ? "text-white" : "text-black"}`}>{video.viralReasoning}</p>
+                <p className={`text-sm font-satoshi font-bold leading-relaxed ${viralScore < 40 ? "text-white" : "text-main"}`}>{video.viralReasoning}</p>
               )}
             </div>
 
@@ -242,7 +242,7 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
                 <p className="text-sm font-cabinet font-black uppercase tracking-wider mb-4 border-b-2 border-main pb-2">💡 AI Suggestions</p>
                 <ul className="space-y-3">
                   {improvements.map((tip: string, i: number) => (
-                    <li key={i} className="text-sm text-black font-satoshi font-medium flex gap-3">
+                    <li key={i} className="text-sm text-main font-satoshi font-medium flex gap-3">
                       <span className="text-[#4dabf7] mt-0.5 font-bold">▶</span>
                       <span>{tip}</span>
                     </li>
@@ -257,7 +257,7 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
                 <p className="text-sm font-cabinet font-black uppercase tracking-wider mb-4 border-b-2 border-main pb-2">🏷️ Hashtags</p>
                 <div className="flex flex-wrap gap-2">
                   {[...(hashtagData.general || []), ...(hashtagData.niche || [])].map((tag: string, i: number) => (
-                    <span key={i} className="text-xs bg-card border-2 border-main text-black font-cabinet font-bold shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_var(--shadow-main)] transition-all px-2 py-1 rounded cursor-default uppercase">
+                    <span key={i} className="text-xs bg-card border-2 border-main text-main font-cabinet font-bold shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_var(--shadow-main)] transition-all px-2 py-1 rounded cursor-default uppercase">
                       #{tag.replace("#", "")}
                     </span>
                   ))}
@@ -273,7 +273,7 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
                   {keyMoments.map((moment: any, i: number) => (
                     <li key={i} className="text-sm flex gap-3 pb-3 border-b-2 border-gray-100 last:border-0 last:pb-0 items-start">
                       <span className="text-white bg-black border-2 border-main rounded px-1.5 py-0.5 text-[10px] font-cabinet font-black shrink-0 shadow-[1px_1px_0px_0px_var(--shadow-main)]">{moment.timestamp}</span>
-                      <span className="text-black font-satoshi font-medium">{moment.description}</span>
+                      <span className="text-main font-satoshi font-medium">{moment.description}</span>
                       {moment.clipWorthy && <span className="text-xl shrink-0 drop-shadow-[1px_1px_0px_var(--shadow-main)]" title="Clip Worthy">📎</span>}
                     </li>
                   ))}
@@ -294,10 +294,14 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
                   className={`flex items-center gap-2 px-4 py-2 rounded text-sm font-cabinet font-black uppercase border-2 border-main transition-all shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_var(--shadow-main)]
                     ${activeTab === platform
                       ? "bg-black text-white"
-                      : "bg-card text-black"
+                      : "bg-card text-main"
                     }`}
                 >
-                  {PLATFORM_ICONS[platform]}
+                  {PLATFORM_ICONS[platform].startsWith("/") ? (
+                    <img src={PLATFORM_ICONS[platform]} alt={platform} className="w-4 h-4 object-contain" />
+                  ) : (
+                    PLATFORM_ICONS[platform]
+                  )}
                   <span className="capitalize">{platform === "twitter" ? "X" : platform}</span>
                 </button>
               ))}
@@ -311,30 +315,36 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
               return (
                 <div key={platform} className={`border-4 border-main shadow-[8px_8px_0px_0px_var(--shadow-main)] rounded p-6 space-y-6 ${PLATFORM_COLORS[platform] || "bg-card"}`}>
                   <div className="flex items-center gap-3 pb-4 border-b-4 border-main">
-                    <span className="text-3xl bg-card border-2 border-main rounded flex items-center justify-center w-12 h-12 shadow-[2px_2px_0px_0px_var(--shadow-main)]">{PLATFORM_ICONS[platform]}</span>
-                    <h3 className="font-cabinet font-black uppercase text-xl text-black">
+                    <span className="text-3xl bg-card border-2 border-main rounded flex items-center justify-center w-12 h-12 shadow-[2px_2px_0px_0px_var(--shadow-main)]">
+                      {PLATFORM_ICONS[platform].startsWith("/") ? (
+                        <img src={PLATFORM_ICONS[platform]} alt={platform} className="w-8 h-8 object-contain" />
+                      ) : (
+                        PLATFORM_ICONS[platform]
+                      )}
+                    </span>
+                    <h3 className="font-cabinet font-black uppercase text-xl text-main">
                       {platform === "twitter" ? "X (Twitter)" : platform}
                     </h3>
-                    <span className="text-[10px] font-cabinet font-bold text-black uppercase ml-auto bg-card border-2 border-main px-2 py-1 rounded shadow-[2px_2px_0px_0px_var(--shadow-main)]">✏️ Click to edit</span>
+                    <span className="text-[10px] font-cabinet font-bold text-main uppercase ml-auto bg-card border-2 border-main px-2 py-1 rounded shadow-[2px_2px_0px_0px_var(--shadow-main)]">✏️ Click to edit</span>
                   </div>
 
                   {platform === "youtube" && content && (
                     <>
                       <div>
-                        <label className="text-sm font-cabinet font-black text-black uppercase mb-2 block">Title</label>
+                        <label className="text-sm font-cabinet font-black text-main uppercase mb-2 block">Title</label>
                         <textarea
                           value={getEditableContent(platform, "title")}
                           onChange={e => setEditable(platform, "title", e.target.value)}
-                          className="w-full bg-page border-2 border-main rounded p-3 text-black font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
+                          className="w-full bg-page border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
                           rows={2}
                         />
                       </div>
                       <div>
-                        <label className="text-sm font-cabinet font-black text-black uppercase mb-2 block">Description</label>
+                        <label className="text-sm font-cabinet font-black text-main uppercase mb-2 block">Description</label>
                         <textarea
                           value={getEditableContent(platform, "description")}
                           onChange={e => setEditable(platform, "description", e.target.value)}
-                          className="w-full bg-page border-2 border-main rounded p-3 text-black font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
+                          className="w-full bg-page border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
                           rows={6}
                         />
                       </div>
@@ -344,20 +354,20 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
                   {platform === "tiktok" && content && (
                     <>
                       <div>
-                        <label className="text-sm font-cabinet font-black text-black uppercase mb-2 block">Caption</label>
+                        <label className="text-sm font-cabinet font-black text-main uppercase mb-2 block">Caption</label>
                         <textarea
                           value={getEditableContent(platform, "caption")}
                           onChange={e => setEditable(platform, "caption", e.target.value)}
-                          className="w-full bg-page border-2 border-main rounded p-3 text-black font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
+                          className="w-full bg-page border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
                           rows={3}
                         />
                       </div>
                       {content.hooks && (
                         <div>
-                          <label className="text-sm font-cabinet font-black text-black uppercase mb-2 block">Hook Options</label>
+                          <label className="text-sm font-cabinet font-black text-main uppercase mb-2 block">Hook Options</label>
                           <div className="space-y-3">
                             {content.hooks.map((hook: string, i: number) => (
-                              <div key={i} className="bg-card border-2 border-main shadow-[2px_2px_0px_0px_var(--shadow-main)] rounded p-3 text-sm font-satoshi font-bold text-black">
+                              <div key={i} className="bg-card border-2 border-main shadow-[2px_2px_0px_0px_var(--shadow-main)] rounded p-3 text-sm font-satoshi font-bold text-main">
                                 {hook}
                               </div>
                             ))}
@@ -370,20 +380,20 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
                   {platform === "instagram" && content && (
                     <>
                       <div>
-                        <label className="text-sm font-cabinet font-black text-black uppercase mb-2 block">Caption</label>
+                        <label className="text-sm font-cabinet font-black text-main uppercase mb-2 block">Caption</label>
                         <textarea
                           value={getEditableContent(platform, "caption")}
                           onChange={e => setEditable(platform, "caption", e.target.value)}
-                          className="w-full bg-page border-2 border-main rounded p-3 text-black font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
+                          className="w-full bg-page border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
                           rows={5}
                         />
                       </div>
                       <div>
-                        <label className="text-sm font-cabinet font-black text-black uppercase mb-2 block">Reels Caption</label>
+                        <label className="text-sm font-cabinet font-black text-main uppercase mb-2 block">Reels Caption</label>
                         <textarea
                           value={getEditableContent(platform, "reels_caption")}
                           onChange={e => setEditable(platform, "reels_caption", e.target.value)}
-                          className="w-full bg-page border-2 border-main rounded p-3 text-black font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
+                          className="w-full bg-page border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
                           rows={2}
                         />
                       </div>
@@ -392,14 +402,14 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
 
                   {platform === "twitter" && content && (
                     <div>
-                      <label className="text-sm font-cabinet font-black text-black uppercase mb-2 block">Tweet</label>
+                      <label className="text-sm font-cabinet font-black text-main uppercase mb-2 block">Tweet</label>
                       <textarea
                         value={getEditableContent(platform, "tweet")}
                         onChange={e => setEditable(platform, "tweet", e.target.value)}
-                        className="w-full bg-page border-2 border-main rounded p-3 text-black font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
+                        className="w-full bg-page border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
                         rows={3}
                       />
-                      <div className="text-xs font-cabinet font-black text-black uppercase text-right mt-2">
+                      <div className="text-xs font-cabinet font-black text-main uppercase text-right mt-2">
                         {getEditableContent(platform, "tweet").length}/280
                       </div>
                     </div>
@@ -407,18 +417,18 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
 
                   {platform === "linkedin" && content && (
                     <div>
-                      <label className="text-sm font-cabinet font-black text-black uppercase mb-2 block">Post</label>
+                      <label className="text-sm font-cabinet font-black text-main uppercase mb-2 block">Post</label>
                       <textarea
                         value={getEditableContent(platform, "post")}
                         onChange={e => setEditable(platform, "post", e.target.value)}
-                        className="w-full bg-page border-2 border-main rounded p-3 text-black font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
+                        className="w-full bg-page border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
                         rows={7}
                       />
                     </div>
                   )}
 
                   {!content && (
-                    <div className="text-center py-12 bg-page border-4 border-main border-dashed rounded text-black font-cabinet font-black uppercase shadow-inner">
+                    <div className="text-center py-12 bg-page border-4 border-main border-dashed rounded text-main font-cabinet font-black uppercase shadow-inner">
                       <p>Content not available. Try reprocessing.</p>
                     </div>
                   )}

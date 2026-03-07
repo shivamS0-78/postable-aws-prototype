@@ -64,8 +64,8 @@ export default function Sidebar({ isOpen, isMobile }: { isOpen: boolean, isMobil
                             className={`flex justify-center items-center px-3 py-3 border-2 border-main rounded transition-all font-cabinet font-bold uppercase tracking-wide
                             ${!isOpen && !isMobile ? "w-[48px]" : "w-full justify-start"}
                             ${isActive
-                                    ? "bg-[#b5e550] text-black shadow-[inset_2px_2px_0px_0px_var(--shadow-main)] hover:bg-[#a4d440]"
-                                    : "bg-card text-black shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_var(--shadow-main)]"
+                                    ? "bg-[#b5e550] text-main shadow-[inset_2px_2px_0px_0px_var(--shadow-main)] hover:bg-[#a4d440]"
+                                    : "bg-card text-main shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_var(--shadow-main)]"
                                 }`}
                         >
                             <span className={`text-xl ${!isOpen && !isMobile ? "w-full text-center" : "w-8 text-center"}`}>
@@ -82,7 +82,7 @@ export default function Sidebar({ isOpen, isMobile }: { isOpen: boolean, isMobil
             <div className={`p-4 border-t-4 border-main bg-page flex flex-col gap-3 justify-center items-center overflow-hidden`}>
                 {(isOpen || isMobile) ? (
                     <div className="w-full">
-                        <div className="font-cabinet font-black text-black bg-card border-2 border-main p-2 rounded shadow-inner truncate text-xs mb-3 text-center" title={userEmail}>
+                        <div className="font-cabinet font-black text-main bg-card border-2 border-main p-2 rounded shadow-inner truncate text-xs mb-3 text-center" title={userEmail}>
                             {userEmail}
                         </div>
                         <button

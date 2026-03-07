@@ -100,7 +100,7 @@ export default function UploadPage() {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="ENTER YOUR VIDEO TITLE..."
             disabled={uploading}
-            className="w-full bg-card border-4 border-main rounded p-5 shadow-[4px_4px_0px_0px_var(--shadow-main)] text-black font-satoshi font-bold placeholder:text-gray-400 focus:outline-none focus:translate-y-1 focus:translate-x-1 focus:shadow-[0px_0px_0px_0px_var(--shadow-main)] transition-all"
+            className="w-full bg-card border-4 border-main rounded p-5 shadow-[4px_4px_0px_0px_var(--shadow-main)] text-main font-satoshi font-bold placeholder:text-gray-400 focus:outline-none focus:translate-y-1 focus:translate-x-1 focus:shadow-[0px_0px_0px_0px_var(--shadow-main)] transition-all"
           />
         </div>
 
@@ -118,11 +118,11 @@ export default function UploadPage() {
             <div className="space-y-3">
               <div className="text-6xl mb-4">🎬</div>
               <p className="font-cabinet font-black text-2xl uppercase">{selectedFile.name}</p>
-              <p className="font-satoshi font-bold text-black/70">
+              <p className="font-satoshi font-bold text-main/70">
                 {(selectedFile.size / (1024 * 1024)).toFixed(1)} MB
               </p>
               {!uploading && (
-                <p className="font-satoshi font-bold text-black/50 text-sm mt-4 uppercase">Click or drag to change file</p>
+                <p className="font-satoshi font-bold text-main/50 text-sm mt-4 uppercase">Click or drag to change file</p>
               )}
             </div>
           ) : (
@@ -163,7 +163,7 @@ export default function UploadPage() {
         <button
           onClick={handleUpload}
           disabled={!selectedFile || uploading}
-          className="w-full bg-[#4dabf7] border-4 border-main text-black font-cabinet font-black uppercase text-xl py-6 rounded shadow-[8px_8px_0px_0px_var(--shadow-main)] disabled:bg-gray-300 disabled:text-gray-500 transition-all hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[6px_6px_0px_0px_var(--shadow-main)]"
+          className="w-full bg-[#4dabf7] border-4 border-main text-main font-cabinet font-black uppercase text-xl py-6 rounded shadow-[8px_8px_0px_0px_var(--shadow-main)] disabled:bg-gray-300 disabled:text-gray-500 transition-all hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[6px_6px_0px_0px_var(--shadow-main)]"
         >
           {uploading ? "UPLOADING..." : "UPLOAD & ANALYZE WITH AI ✨"}
         </button>

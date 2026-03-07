@@ -13,6 +13,7 @@ interface PlatformConfig {
     borderColor: string
     bgColor: string
     description: string
+    logoSize?: string
 }
 
 interface ConnectedInfo {
@@ -25,32 +26,35 @@ const platformConfigs: PlatformConfig[] = [
     {
         id: "youtube",
         platform: "YouTube",
-        icon: "▶",
-        color: "text-red-400",
+        icon: "/logos/youtube.png",
+        color: "text-[#FF0000]",
         hoverColor: "hover:border-red-500",
         borderColor: "border-red-500",
         bgColor: "bg-red-500/10",
         description: "Upload and publish videos directly to your YouTube channel",
+        logoSize: "w-12 h-12"
     },
     {
         id: "instagram",
         platform: "Instagram",
-        icon: "📷",
-        color: "text-pink-400",
+        icon: "/logos/instagram.png",
+        color: "text-[#E4405F]",
         hoverColor: "hover:border-pink-500",
         borderColor: "border-pink-500",
         bgColor: "bg-pink-500/10",
         description: "Share Reels and short clips to your Instagram account",
+        logoSize: "w-14 h-14"
     },
     {
         id: "linkedin",
         platform: "LinkedIn",
-        icon: "💼",
-        color: "text-blue-400",
+        icon: "/logos/linkedin.png",
+        color: "text-[#0A66C2]",
         hoverColor: "hover:border-blue-500",
         borderColor: "border-blue-500",
         bgColor: "bg-blue-500/10",
         description: "Post professional video content to your LinkedIn profile",
+        logoSize: "w-14 h-14"
     },
 ]
 
@@ -136,7 +140,7 @@ function SettingsContent() {
             {/* Toast Notification */}
             {toast && (
                 <div className={`fixed top-4 right-4 z-50 px-6 py-4 rounded border-4 border-main font-cabinet font-bold uppercase text-sm shadow-[4px_4px_0px_0px_var(--shadow-main)] transition-all animate-in slide-in-from-right ${toast.type === "success"
-                    ? "bg-[#b5e550] text-black"
+                    ? "bg-[#b5e550] text-main"
                     : "bg-[#ff6b6b] text-white"
                     }`}>
                     {toast.message}
@@ -175,20 +179,24 @@ function SettingsContent() {
                                         <div className="flex items-center gap-6">
                                             {/* Platform Icon */}
                                             <div
-                                                className={`w-16 h-16 border-2 border-main rounded shadow-[2px_2px_0px_0px_var(--shadow-main)] flex items-center justify-center text-3xl ${connected ? config.bgColor : "bg-gray-100"
+                                                className={`w-16 h-16 border-2 border-main rounded shadow-[2px_2px_0px_0px_var(--shadow-main)] flex items-center justify-center text-3xl ${connected ? config.bgColor : "bg-card"
                                                     }`}
                                             >
-                                                {config.icon}
+                                                {config.icon.startsWith("/") ? (
+                                                    <img src={config.icon} alt={config.platform} className={`${config.logoSize || "w-12 h-12"} object-contain`} />
+                                                ) : (
+                                                    config.icon
+                                                )}
                                             </div>
 
                                             {/* Platform Info */}
                                             <div>
                                                 <div className="flex items-center gap-3 mb-1">
-                                                    <h3 className={`font-cabinet font-black text-xl uppercase tracking-tighter ${connected ? config.color : "text-black"}`}>
+                                                    <h3 className={`font-cabinet font-black text-xl uppercase tracking-tighter ${connected ? config.color : "text-main"}`}>
                                                         {config.platform}
                                                     </h3>
                                                     {connected && (
-                                                        <span className="text-xs bg-[#b5e550] text-black font-bold uppercase px-2 py-0.5 rounded border-2 border-main shadow-[1px_1px_0px_0px_var(--shadow-main)] flex items-center gap-1">
+                                                        <span className="text-xs bg-[#b5e550] text-main font-bold uppercase px-2 py-0.5 rounded border-2 border-main shadow-[1px_1px_0px_0px_var(--shadow-main)] flex items-center gap-1">
                                                             Connected
                                                         </span>
                                                     )}
@@ -233,7 +241,7 @@ function SettingsContent() {
                         <span className="text-3xl">🔒</span>
                         <div>
                             <h4 className="font-cabinet font-black uppercase text-xl mb-2">Secure OAuth Authentication</h4>
-                            <p className="font-satoshi font-medium text-black/80">
+                            <p className="font-satoshi font-medium text-main/80">
                                 POSTABLE uses industry-standard OAuth 2.0 to securely connect your accounts.
                                 We never store your passwords — only revocable access tokens with minimal permissions required for publishing.
                             </p>

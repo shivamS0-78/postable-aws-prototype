@@ -43,8 +43,8 @@ export default function LoginPage() {
     }
 
     // Neo-brutalist shared classes
-    const inputClass = "w-full p-4 bg-card border-2 border-main rounded shadow-[4px_4px_0px_0px_var(--shadow-main)] focus:outline-none focus:translate-y-1 focus:translate-x-1 focus:shadow-[0px_0px_0px_0px_var(--shadow-main)] transition-all font-satoshi font-medium text-black placeholder:text-gray-400"
-    const buttonClass = "w-full p-4 bg-[#b5e550] border-2 border-main rounded shadow-[4px_4px_0px_0px_var(--shadow-main)] hover:translate-y-1 hover:translate-x-1 hover:shadow-[0px_0px_0px_0px_var(--shadow-main)] transition-all font-cabinet font-black text-black uppercase tracking-wide disabled:opacity-50"
+    const inputClass = "w-full p-4 bg-card border-2 border-main rounded shadow-[4px_4px_0px_0px_var(--shadow-main)] focus:outline-none focus:translate-y-1 focus:translate-x-1 focus:shadow-[0px_0px_0px_0px_var(--shadow-main)] transition-all font-satoshi font-medium text-main placeholder:text-gray-400"
+    const buttonClass = "w-full p-4 bg-[#b5e550] border-2 border-main rounded shadow-[4px_4px_0px_0px_var(--shadow-main)] hover:translate-y-1 hover:translate-x-1 hover:shadow-[0px_0px_0px_0px_var(--shadow-main)] transition-all font-cabinet font-black text-main uppercase tracking-wide disabled:opacity-50"
 
     return (
         <div className="min-h-screen bg-page text-main flex items-center justify-center p-6 selection:bg-[#ff6b6b] selection:text-white">

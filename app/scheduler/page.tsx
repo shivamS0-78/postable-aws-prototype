@@ -22,9 +22,9 @@ interface ConnectedAccount {
 
 // Platform config (mirrors Settings page)
 const PLATFORM_CONFIG: Record<string, { label: string; icon: string; color: string; bg: string; border: string }> = {
-    youtube: { label: "YouTube", icon: "▶", color: "text-red-400", bg: "bg-red-500/15", border: "border-red-500/30" },
-    instagram: { label: "Instagram", icon: "📷", color: "text-pink-400", bg: "bg-pink-500/15", border: "border-pink-500/30" },
-    linkedin: { label: "LinkedIn", icon: "💼", color: "text-blue-400", bg: "bg-blue-500/15", border: "border-blue-500/30" },
+    youtube: { label: "YouTube", icon: "/logos/youtube.png", color: "text-[#FF0000]", bg: "bg-red-500/15", border: "border-red-500/30" },
+    instagram: { label: "Instagram", icon: "/logos/instagram.png", color: "text-[#E4405F]", bg: "bg-pink-500/15", border: "border-pink-500/30" },
+    linkedin: { label: "LinkedIn", icon: "/logos/linkedin.png", color: "text-[#0A66C2]", bg: "bg-blue-500/15", border: "border-blue-500/30" },
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────
@@ -148,15 +148,15 @@ function CircularTimePicker({ value, onChange }: { value: string; onChange: (v: 
             <div className="flex items-center gap-2">
                 <button
                     onClick={() => setMode("hour")}
-                    className={`text-3xl font-black font-cabinet tabular-nums px-3 py-2 rounded border-2 border-main transition-all shadow-[2px_2px_0px_0px_var(--shadow-main)] ${mode === "hour" ? "bg-[#b5e550] text-black" : "bg-card text-gray-500 hover:text-black"
+                    className={`text-3xl font-black font-cabinet tabular-nums px-3 py-2 rounded border-2 border-main transition-all shadow-[2px_2px_0px_0px_var(--shadow-main)] ${mode === "hour" ? "bg-[#b5e550] text-main" : "bg-card text-gray-500 hover:text-main"
                         }`}
                 >
                     {String(displayHour).padStart(2, "0")}
                 </button>
-                <span className="text-3xl font-black font-cabinet text-black">:</span>
+                <span className="text-3xl font-black font-cabinet text-main">:</span>
                 <button
                     onClick={() => setMode("minute")}
-                    className={`text-3xl font-black font-cabinet tabular-nums px-3 py-2 rounded border-2 border-main transition-all shadow-[2px_2px_0px_0px_var(--shadow-main)] ${mode === "minute" ? "bg-[#b5e550] text-black" : "bg-card text-gray-500 hover:text-black"
+                    className={`text-3xl font-black font-cabinet tabular-nums px-3 py-2 rounded border-2 border-main transition-all shadow-[2px_2px_0px_0px_var(--shadow-main)] ${mode === "minute" ? "bg-[#b5e550] text-main" : "bg-card text-gray-500 hover:text-main"
                         }`}
                 >
                     {String(m).padStart(2, "0")}
@@ -164,12 +164,12 @@ function CircularTimePicker({ value, onChange }: { value: string; onChange: (v: 
                 <div className="flex flex-col gap-1 ml-2">
                     <button
                         onClick={() => togglePeriod("AM")}
-                        className={`text-xs font-black font-cabinet uppercase px-2 py-1 rounded border-2 border-main shadow-[1px_1px_0px_0px_var(--shadow-main)] transition-all ${period === "AM" ? "bg-black text-[#b5e550]" : "bg-card text-gray-600 hover:text-black"
+                        className={`text-xs font-black font-cabinet uppercase px-2 py-1 rounded border-2 border-main shadow-[1px_1px_0px_0px_var(--shadow-main)] transition-all ${period === "AM" ? "bg-black text-[#b5e550]" : "bg-card text-gray-600 hover:text-main"
                             }`}
                     >AM</button>
                     <button
                         onClick={() => togglePeriod("PM")}
-                        className={`text-xs font-black font-cabinet uppercase px-2 py-1 rounded border-2 border-main shadow-[1px_1px_0px_0px_var(--shadow-main)] transition-all ${period === "PM" ? "bg-black text-[#b5e550]" : "bg-card text-gray-600 hover:text-black"
+                        className={`text-xs font-black font-cabinet uppercase px-2 py-1 rounded border-2 border-main shadow-[1px_1px_0px_0px_var(--shadow-main)] transition-all ${period === "PM" ? "bg-black text-[#b5e550]" : "bg-card text-gray-600 hover:text-main"
                             }`}
                     >PM</button>
                 </div>
@@ -433,14 +433,14 @@ export default function SchedulerPage() {
                 {/* Day number + actions */}
                 <div className="flex items-center justify-between mb-2 p-1 border-b-2 border-main/10">
                     <span className={`text-sm font-cabinet font-black w-6 h-6 flex items-center justify-center rounded border-2 border-main bg-card shadow-[1px_1px_0px_0px_var(--shadow-main)]
-            ${isToday ? "bg-[#ff6b6b] text-white" : pastDay ? "text-gray-500 bg-gray-200 border-gray-400" : isCurrentMonth ? "text-black" : "text-gray-400"}`}
+            ${isToday ? "bg-[#ff6b6b] text-white" : pastDay ? "text-gray-500 bg-gray-200 border-gray-400" : isCurrentMonth ? "text-main" : "text-gray-400"}`}
                     >
                         {date.getDate()}
                     </span>
                     {!pastDay && (
                         <button
                             onClick={() => openNoteModal(key)}
-                            className="opacity-0 group-hover:opacity-100 w-6 h-6 flex items-center justify-center rounded border-2 border-main bg-card shadow-[1px_1px_0px_0px_var(--shadow-main)] hover:bg-[#b5e550] text-black font-cabinet font-black transition-all"
+                            className="opacity-0 group-hover:opacity-100 w-6 h-6 flex items-center justify-center rounded border-2 border-main bg-card shadow-[1px_1px_0px_0px_var(--shadow-main)] hover:bg-[#b5e550] text-main font-cabinet font-black transition-all"
                             title="Add note"
                         >
                             +
@@ -462,8 +462,8 @@ export default function SchedulerPage() {
                         className="group/item flex flex-col gap-1 bg-card border-2 border-main rounded px-2 py-1.5 mb-2 hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all cursor-pointer"
                     >
                         <div className="flex items-center gap-1.5">
-                            <span className="text-black text-xs">🎬</span>
-                            <span className="truncate flex-1 text-xs font-cabinet font-black text-black uppercase">{item.videoTitle}</span>
+                            <span className="text-main text-xs">🎬</span>
+                            <span className="truncate flex-1 text-xs font-cabinet font-black text-main uppercase">{item.videoTitle}</span>
                             {(!pastDay || item.publishStatus) && (
                                 <button
                                     onClick={() => removeScheduled(key, item.videoId)}
@@ -475,22 +475,26 @@ export default function SchedulerPage() {
                             )}
                         </div>
                         <div className="flex items-center gap-1 bg-page p-1 border border-main rounded flex-wrap mt-2">
-                            <span className="text-[10px] font-cabinet font-black text-black border-r border-main pr-1">⏰ {item.time || "09:00"}</span>
+                            <span className="text-[10px] font-cabinet font-black text-main border-r border-main pr-1">⏰ {item.time || "09:00"}</span>
                             {item.autoUpload && !item.publishStatus && (
-                                <span className="text-[9px] font-cabinet font-bold uppercase bg-[#b5e550] text-black px-1 border border-main rounded">AUTO</span>
+                                <span className="text-[9px] font-cabinet font-bold uppercase bg-[#b5e550] text-main px-1 border border-main rounded">AUTO</span>
                             )}
                             {item.publishStatus === "publishing" && (
                                 <span className="text-[9px] font-cabinet font-bold uppercase bg-[#4dabf7] text-white px-1 border border-main rounded animate-pulse">PUBLISHING...</span>
                             )}
                             {item.publishStatus === "published" && (
-                                <span className="text-[9px] font-cabinet font-bold uppercase bg-[#b5e550] text-black px-1 border border-main rounded">✅ PUBLISHED</span>
+                                <span className="text-[9px] font-cabinet font-bold uppercase bg-[#b5e550] text-main px-1 border border-main rounded">✅ PUBLISHED</span>
                             )}
                             {item.publishStatus === "failed" && (
                                 <span className="text-[9px] font-cabinet font-bold uppercase bg-[#ff6b6b] text-white px-1 border border-main rounded" title={item.publishMessage}>❌ FAILED</span>
                             )}
                             {item.platforms?.map(p => (
                                 <span key={p} className={`text-[10px]`} title={PLATFORM_CONFIG[p]?.label}>
-                                    {PLATFORM_CONFIG[p]?.icon || p}
+                                    {PLATFORM_CONFIG[p]?.icon.startsWith("/") ? (
+                                        <img src={PLATFORM_CONFIG[p]?.icon} alt={PLATFORM_CONFIG[p]?.label} className="w-3 h-3 object-contain inline-block" />
+                                    ) : (
+                                        PLATFORM_CONFIG[p]?.icon || p
+                                    )}
                                 </span>
                             ))}
                         </div>
@@ -503,8 +507,8 @@ export default function SchedulerPage() {
                         onClick={() => !pastDay && openNoteModal(key)}
                         className={`flex items-start gap-1 bg-page border-2 border-main border-dashed rounded px-2 py-1 mt-1 ${pastDay ? "" : "cursor-pointer hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[2px_2px_0px_0px_var(--shadow-main)]"} transition-all`}
                     >
-                        <span className="text-black text-xs shrink-0 pt-0.5">📝</span>
-                        <span className="text-[11px] font-cabinet font-bold text-black line-clamp-2 leading-tight uppercase">{data.note}</span>
+                        <span className="text-main text-xs shrink-0 pt-0.5">📝</span>
+                        <span className="text-[11px] font-cabinet font-bold text-main line-clamp-2 leading-tight uppercase">{data.note}</span>
                     </div>
                 )}
 
@@ -512,7 +516,7 @@ export default function SchedulerPage() {
                 {isDragTarget && !pastDay && (
                     <div className="absolute inset-0 flex items-center justify-center rounded pointer-events-none">
                         <div className="bg-[#b5e550] border-4 border-main border-dashed rounded px-3 py-1.5 shadow-[4px_4px_0px_0px_var(--shadow-main)]">
-                            <span className="text-black text-xs font-cabinet font-black uppercase">DROP HERE</span>
+                            <span className="text-main text-xs font-cabinet font-black uppercase">DROP HERE</span>
                         </div>
                     </div>
                 )}
@@ -525,7 +529,7 @@ export default function SchedulerPage() {
         <div className="min-h-screen bg-page text-main font-satoshi selection:bg-[#ff6b6b] selection:text-white pb-32">
             {/* Toast Notification */}
             {toast && (
-                <div className={`fixed top-4 right-4 z-[60] max-w-md px-6 py-4 border-4 border-main text-black font-cabinet font-bold uppercase shadow-[4px_4px_0px_0px_var(--shadow-main)] transition-all animate-in slide-in-from-right ${toast.type === "success" ? "bg-[#b5e550]"
+                <div className={`fixed top-4 right-4 z-[60] max-w-md px-6 py-4 border-4 border-main text-main font-cabinet font-bold uppercase shadow-[4px_4px_0px_0px_var(--shadow-main)] transition-all animate-in slide-in-from-right ${toast.type === "success" ? "bg-[#b5e550]"
                     : toast.type === "error" ? "bg-[#ff6b6b] text-white"
                         : "bg-[#4dabf7] text-white"
                     }`}>
@@ -549,15 +553,15 @@ export default function SchedulerPage() {
                                     <button onClick={goPrev} className="w-10 h-10 flex items-center justify-center font-cabinet font-black text-xl hover:bg-[#b5e550] border-r-2 border-main transition-colors">‹</button>
                                     <button onClick={goNext} className="w-10 h-10 flex items-center justify-center font-cabinet font-black text-xl hover:bg-[#4dabf7] transition-colors">›</button>
                                 </div>
-                                <h2 className="text-xl sm:text-2xl font-cabinet font-black uppercase text-black whitespace-nowrap">{heading}</h2>
+                                <h2 className="text-xl sm:text-2xl font-cabinet font-black uppercase text-main whitespace-nowrap">{heading}</h2>
                             </div>
                             <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0">
                                 <button onClick={goToday} className="px-3 sm:px-4 py-2 font-cabinet font-black uppercase border-2 border-main rounded bg-card shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_var(--shadow-main)] hover:bg-[#ff6b6b] hover:text-white transition-all text-xs sm:text-base">Today</button>
                                 <div className="flex bg-page border-2 border-main rounded p-1 shadow-[2px_2px_0px_0px_var(--shadow-main)] shrink-0">
-                                    <button onClick={() => setView("month")} className={`px-2 sm:px-4 py-1 font-cabinet font-black uppercase rounded border-2 border-transparent transition-all text-xs sm:text-base ${view === "month" ? "bg-card border-main shadow-[2px_2px_0px_0px_var(--shadow-main)]" : "text-gray-500 hover:text-black"}`}>Month</button>
-                                    <button onClick={() => setView("week")} className={`px-2 sm:px-4 py-1 font-cabinet font-black uppercase rounded border-2 border-transparent transition-all text-xs sm:text-base ${view === "week" ? "bg-card border-main shadow-[2px_2px_0px_0px_var(--shadow-main)]" : "text-gray-500 hover:text-black"}`}>Week</button>
+                                    <button onClick={() => setView("month")} className={`px-2 sm:px-4 py-1 font-cabinet font-black uppercase rounded border-2 border-transparent transition-all text-xs sm:text-base ${view === "month" ? "bg-card border-main shadow-[2px_2px_0px_0px_var(--shadow-main)]" : "text-gray-500 hover:text-main"}`}>Month</button>
+                                    <button onClick={() => setView("week")} className={`px-2 sm:px-4 py-1 font-cabinet font-black uppercase rounded border-2 border-transparent transition-all text-xs sm:text-base ${view === "week" ? "bg-card border-main shadow-[2px_2px_0px_0px_var(--shadow-main)]" : "text-gray-500 hover:text-main"}`}>Week</button>
                                 </div>
-                                <button onClick={() => setSidebarOpen(p => !p)} className={`px-3 sm:px-4 py-2 font-cabinet font-black uppercase border-2 border-main rounded transition-all shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_var(--shadow-main)] shrink-0 text-xs sm:text-base ${sidebarOpen ? "bg-[#b5e550] text-black" : "bg-card text-black"}`}>🎬 Videos</button>
+                                <button onClick={() => setSidebarOpen(p => !p)} className={`px-3 sm:px-4 py-2 font-cabinet font-black uppercase border-2 border-main rounded transition-all shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_var(--shadow-main)] shrink-0 text-xs sm:text-base ${sidebarOpen ? "bg-[#b5e550] text-main" : "bg-card text-main"}`}>🎬 Videos</button>
                             </div>
                         </div>
 
@@ -567,7 +571,7 @@ export default function SchedulerPage() {
                                 {/* Day headers */}
                                 <div className="grid grid-cols-7 mb-2">
                                     {DAYS_SHORT.map(d => (
-                                        <div key={d} className="text-center font-cabinet font-black text-black uppercase tracking-wider py-2 bg-card border-2 border-main mx-1 mb-2 shadow-[2px_2px_0px_0px_var(--shadow-main)]">{d}</div>
+                                        <div key={d} className="text-center font-cabinet font-black text-main uppercase tracking-wider py-2 bg-card border-2 border-main mx-1 mb-2 shadow-[2px_2px_0px_0px_var(--shadow-main)]">{d}</div>
                                     ))}
                                 </div>
 
@@ -590,11 +594,11 @@ export default function SchedulerPage() {
                         </div>
 
                         {/* Legend */}
-                        <div className="flex items-center gap-6 mt-6 text-sm font-cabinet font-bold text-black uppercase">
+                        <div className="flex items-center gap-6 mt-6 text-sm font-cabinet font-bold text-main uppercase">
                             <div className="flex items-center gap-2"><span className="w-3 h-3 border-2 border-main rounded bg-[#ff6b6b]" /> Today</div>
-                            <div className="flex items-center gap-2"><span className="text-black text-lg">🎬</span> Scheduled</div>
-                            <div className="flex items-center gap-2"><span className="text-black text-lg">📝</span> Note</div>
-                            <div className="flex items-center gap-2"><span className="text-[10px] bg-[#b5e550] text-black px-1.5 py-0.5 border-2 border-main rounded">AUTO</span> Auto-Upload</div>
+                            <div className="flex items-center gap-2"><span className="text-main text-lg">🎬</span> Scheduled</div>
+                            <div className="flex items-center gap-2"><span className="text-main text-lg">📝</span> Note</div>
+                            <div className="flex items-center gap-2"><span className="text-[10px] bg-[#b5e550] text-main px-1.5 py-0.5 border-2 border-main rounded">AUTO</span> Auto-Upload</div>
                             <div className="flex items-center gap-2"><span className="w-3 h-3 border-2 border-main bg-gray-200 opacity-50 rounded" /> Past (locked)</div>
                         </div>
                     </div>
@@ -605,7 +609,7 @@ export default function SchedulerPage() {
                             <div className="sticky top-6">
                                 <div className="bg-card border-4 border-main rounded shadow-[8px_8px_0px_0px_var(--shadow-main)] overflow-hidden">
                                     <div className="px-5 py-4 border-b-4 border-main">
-                                        <h3 className="text-lg font-cabinet font-black uppercase text-black mb-3">Videos</h3>
+                                        <h3 className="text-lg font-cabinet font-black uppercase text-main mb-3">Videos</h3>
                                         <div className="relative">
                                             <input
                                                 type="text"
@@ -633,37 +637,41 @@ export default function SchedulerPage() {
                                                 >
                                                     <div className="w-10 h-10 border-2 border-main bg-[#b5e550] rounded flex items-center justify-center text-xl shrink-0 shadow-[2px_2px_0px_0px_var(--shadow-main)]">🎬</div>
                                                     <div className="min-w-0 flex-1">
-                                                        <p className="text-sm font-cabinet font-black uppercase text-black truncate">{video.title}</p>
+                                                        <p className="text-sm font-cabinet font-black uppercase text-main truncate">{video.title}</p>
                                                         <p className="text-[10px] font-satoshi font-bold text-gray-500">
                                                             {new Date(video.createdAt).toLocaleDateString()}
                                                             {video.viralScore && (
-                                                                <span className={`ml-2 inline-block px-1 border border-main rounded bg-page text-black`}>
+                                                                <span className={`ml-2 inline-block px-1 border border-main rounded bg-page text-main`}>
                                                                     🔥 {video.viralScore}
                                                                 </span>
                                                             )}
                                                         </p>
                                                     </div>
-                                                    <div className="shrink-0 text-gray-400 font-cabinet font-black group-hover:text-black">⣿</div>
+                                                    <div className="shrink-0 text-gray-400 font-cabinet font-black group-hover:text-main">⣿</div>
                                                 </div>
                                             ))
                                         )}
                                     </div>
                                     <div className="px-5 py-4 border-t-4 border-main">
-                                        <p className="text-xs font-cabinet font-black text-black uppercase mb-3">Connected Platforms</p>
+                                        <p className="text-xs font-cabinet font-black text-main uppercase mb-3">Connected Platforms</p>
                                         <div className="flex items-center gap-2 flex-wrap">
                                             {connectedAccounts.length === 0 ? (
                                                 <p className="text-xs font-cabinet font-bold uppercase text-gray-500">None — <span onClick={() => router.push("/settings")} className="text-blue-500 cursor-pointer hover:underline border-l-2 border-gray-300 pl-2 ml-1">connect in Settings</span></p>
                                             ) : (
                                                 connectedAccounts.map(a => (
-                                                    <span key={a.platform} className={`text-[10px] px-2 py-1 uppercase font-cabinet font-bold rounded border-2 border-main shadow-[1px_1px_0px_0px_var(--shadow-main)] bg-card text-black flex items-center gap-1`}>
-                                                        {PLATFORM_CONFIG[a.platform]?.icon} {a.username}
+                                                    <span key={a.platform} className={`text-[10px] px-2 py-1 uppercase font-cabinet font-bold rounded border-2 border-main shadow-[1px_1px_0px_0px_var(--shadow-main)] bg-card text-main flex items-center gap-1`}>
+                                                        {PLATFORM_CONFIG[a.platform]?.icon.startsWith("/") ? (
+                                                            <img src={PLATFORM_CONFIG[a.platform]?.icon} alt={a.platform} className="w-3 h-3 object-contain" />
+                                                        ) : (
+                                                            PLATFORM_CONFIG[a.platform]?.icon
+                                                        )} {a.username}
                                                     </span>
                                                 ))
                                             )}
                                         </div>
                                     </div>
                                     <div className="px-5 py-3 border-t-4 border-main bg-page text-center">
-                                        <p className="text-xs font-cabinet font-bold uppercase text-black">Drag videos onto dates to schedule</p>
+                                        <p className="text-xs font-cabinet font-bold uppercase text-main">Drag videos onto dates to schedule</p>
                                     </div>
                                 </div>
                             </div>
@@ -678,7 +686,7 @@ export default function SchedulerPage() {
                     <div className="bg-card border-4 border-main rounded w-full max-w-lg shadow-[8px_8px_0px_0px_var(--shadow-main)] flex flex-col max-h-[90vh]" onClick={e => e.stopPropagation()}>
                         <div className="px-6 py-4 border-b-4 border-main flex items-center justify-between shrink-0 bg-page">
                             <div>
-                                <h3 className="text-xl font-cabinet font-black uppercase text-black">📅 Schedule Video</h3>
+                                <h3 className="text-xl font-cabinet font-black uppercase text-main">📅 Schedule Video</h3>
                                 <p className="text-xs font-satoshi font-bold text-gray-500 mt-1 uppercase">
                                     {(() => {
                                         const [y, m, d] = scheduleModal.key.split("-").map(Number)
@@ -694,14 +702,14 @@ export default function SchedulerPage() {
                             <div className="flex items-center gap-4 bg-card border-4 border-main shadow-[4px_4px_0px_0px_var(--shadow-main)] rounded p-4">
                                 <div className="w-12 h-12 border-2 border-main bg-[#4dabf7] rounded shadow-[2px_2px_0px_0px_var(--shadow-main)] flex items-center justify-center text-2xl">🎬</div>
                                 <div>
-                                    <p className="text-lg font-cabinet font-black uppercase text-black">{scheduleModal.videoTitle}</p>
+                                    <p className="text-lg font-cabinet font-black uppercase text-main">{scheduleModal.videoTitle}</p>
                                     <p className="text-xs font-satoshi font-bold text-gray-500 uppercase">Will be scheduled for upload</p>
                                 </div>
                             </div>
 
                             {/* Circular Time picker */}
                             <div>
-                                <label className="block text-xs font-cabinet font-bold uppercase text-black mb-2">Upload Time</label>
+                                <label className="block text-xs font-cabinet font-bold uppercase text-main mb-2">Upload Time</label>
                                 <CircularTimePicker
                                     value={scheduleModal.time}
                                     onChange={(t) => {
@@ -749,7 +757,11 @@ export default function SchedulerPage() {
                                                         }`}
                                                 >
                                                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm ${selected ? cfg?.bg || "bg-gray-700" : "bg-gray-700/50"}`}>
-                                                        {cfg?.icon || "📱"}
+                                                        {cfg?.icon.startsWith("/") ? (
+                                                            <img src={cfg.icon} alt={cfg.label} className="w-5 h-5 object-contain" />
+                                                        ) : (
+                                                            cfg?.icon || "📱"
+                                                        )}
                                                     </div>
                                                     <div className="flex-1">
                                                         <p className={`text-xs font-medium ${selected ? cfg?.color || "text-white" : "text-gray-300"}`}>
@@ -823,7 +835,7 @@ export default function SchedulerPage() {
                     <div className="bg-card border-4 border-main rounded w-full max-w-md shadow-[8px_8px_0px_0px_var(--shadow-main)] flex flex-col" onClick={e => e.stopPropagation()}>
                         <div className="px-6 py-4 border-b-4 border-main flex items-center justify-between bg-page">
                             <div>
-                                <h3 className="text-xl font-cabinet font-black uppercase text-black">📝 Note</h3>
+                                <h3 className="text-xl font-cabinet font-black uppercase text-main">📝 Note</h3>
                                 <p className="text-xs font-satoshi font-bold text-gray-500 mt-1 uppercase">
                                     {(() => {
                                         const [y, m, d] = noteModal.key.split("-").map(Number)
@@ -840,7 +852,7 @@ export default function SchedulerPage() {
                                 value={noteModal.note}
                                 onChange={e => setNoteModal({ ...noteModal, note: e.target.value })}
                                 placeholder="WRITE YOUR NOTE HERE..."
-                                className="w-full bg-card border-4 border-main rounded p-4 text-black font-satoshi font-bold placeholder:text-gray-400 focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] resize-none transition-all shadow-[4px_4px_0px_0px_var(--shadow-main)]"
+                                className="w-full bg-card border-4 border-main rounded p-4 text-main font-satoshi font-bold placeholder:text-gray-400 focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] resize-none transition-all shadow-[4px_4px_0px_0px_var(--shadow-main)]"
                             />
                         </div>
                         <div className="px-6 py-4 border-t-4 border-main flex items-center justify-between bg-page">
@@ -849,7 +861,7 @@ export default function SchedulerPage() {
                             ) : <div />}
                             <div className="flex gap-3">
                                 <button onClick={() => setNoteModal(null)} className="px-4 py-2 font-cabinet font-black uppercase border-2 border-main rounded bg-card shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_var(--shadow-main)] transition-all">Cancel</button>
-                                <button onClick={saveNote} className="px-4 py-2 font-cabinet font-black uppercase border-2 border-main rounded bg-[#b5e550] text-black shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_var(--shadow-main)] transition-all">Save Note</button>
+                                <button onClick={saveNote} className="px-4 py-2 font-cabinet font-black uppercase border-2 border-main rounded bg-[#b5e550] text-main shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_var(--shadow-main)] transition-all">Save Note</button>
                             </div>
                         </div>
                     </div>

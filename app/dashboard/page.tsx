@@ -97,7 +97,7 @@ export default function Dashboard() {
               <p className="font-cabinet font-bold text-xl mb-6 uppercase">No videos yet. Upload your first one!</p>
               <button
                 onClick={() => router.push("/upload")}
-                className="bg-[#b5e550] border-2 border-main text-black font-cabinet font-black uppercase tracking-wide px-8 py-4 rounded shadow-[4px_4px_0px_0px_var(--shadow-main)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all"
+                className="bg-[#b5e550] border-2 border-main text-main font-cabinet font-black uppercase tracking-wide px-8 py-4 rounded shadow-[4px_4px_0px_0px_var(--shadow-main)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all"
               >
                 Let's Go →
               </button>
@@ -142,7 +142,7 @@ export default function Dashboard() {
                       <button
                         onClick={(e) => handleDelete(e, video.id)}
                         disabled={deletingId === video.id}
-                        className="p-3 bg-card border-2 border-main rounded shadow-[2px_2px_0px_0px_var(--shadow-main)] text-black hover:bg-[#ff6b6b] hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed group-hover:scale-110"
+                        className="p-3 bg-card border-2 border-main rounded shadow-[2px_2px_0px_0px_var(--shadow-main)] text-main hover:bg-[#ff6b6b] hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed group-hover:scale-110"
                         title="Delete video"
                       >
                         {deletingId === video.id ? (
