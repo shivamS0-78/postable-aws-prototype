@@ -70,7 +70,7 @@ export default function UploadPage() {
 
       setProgress(100)
       setStage("Upload complete! Redirecting...")
-      
+
       // Redirect to video page
       setTimeout(() => router.push(`/video/${videoId}`), 1000)
 
@@ -82,78 +82,81 @@ export default function UploadPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
+    <div className="min-h-screen bg-[#f4f4f0] text-black font-satoshi selection:bg-[#ff6b6b] selection:text-white">
       {/* Header */}
-      <div className="border-b border-gray-800 px-6 py-4">
-        <div className="max-w-3xl mx-auto flex items-center gap-3">
-          <button 
+      <div className="border-b-4 border-black bg-white px-6 py-4">
+        <div className="max-w-3xl mx-auto flex items-center gap-4">
+          <button
             onClick={() => router.push("/")}
-            className="text-gray-400 hover:text-white text-sm"
+            className="bg-white border-2 border-black text-black font-cabinet font-bold uppercase text-sm px-4 py-2 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
           >
             ← Back
           </button>
-          <h1 className="text-xl font-bold text-purple-400">Upload Video</h1>
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">📹</span>
+            <h1 className="text-2xl font-black font-cabinet uppercase tracking-wide">Upload Video</h1>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-6 py-10 space-y-6">
+      <div className="max-w-3xl mx-auto px-6 py-10 space-y-8">
         {/* Title Input */}
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
+          <label className="block font-cabinet font-black text-lg uppercase tracking-wider mb-2">
             Video Title
           </label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter your video title..."
+            placeholder="ENTER YOUR VIDEO TITLE..."
             disabled={uploading}
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
+            className="w-full bg-white border-4 border-black rounded p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-black font-satoshi font-bold placeholder:text-gray-400 focus:outline-none focus:translate-y-1 focus:translate-x-1 focus:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] transition-all"
           />
         </div>
 
         {/* Dropzone */}
         <div
           {...getRootProps()}
-          className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all
-            ${isDragActive ? "border-purple-400 bg-purple-900/20" : "border-gray-700 hover:border-gray-500"}
+          className={`border-4 border-dashed rounded p-12 text-center cursor-pointer transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
+            ${isDragActive ? "border-black bg-[#4dabf7]" : "border-black bg-white hover:bg-[#b5e550]"}
             ${uploading ? "opacity-50 cursor-not-allowed" : ""}
-            ${selectedFile ? "border-green-500 bg-green-900/10" : ""}
+            ${selectedFile ? "border-black bg-[#b5e550]" : ""}
           `}
         >
           <input {...getInputProps()} />
           {selectedFile ? (
-            <div className="space-y-2">
-              <div className="text-4xl">🎬</div>
-              <p className="text-green-400 font-medium">{selectedFile.name}</p>
-              <p className="text-gray-400 text-sm">
+            <div className="space-y-3">
+              <div className="text-6xl mb-4">🎬</div>
+              <p className="font-cabinet font-black text-2xl uppercase">{selectedFile.name}</p>
+              <p className="font-satoshi font-bold text-black/70">
                 {(selectedFile.size / (1024 * 1024)).toFixed(1)} MB
               </p>
               {!uploading && (
-                <p className="text-gray-500 text-sm">Click or drag to change file</p>
+                <p className="font-satoshi font-bold text-black/50 text-sm mt-4 uppercase">Click or drag to change file</p>
               )}
             </div>
           ) : (
-            <div className="space-y-3">
-              <div className="text-5xl">📹</div>
-              <p className="text-lg font-medium text-gray-300">
-                {isDragActive ? "Drop it here!" : "Drag & drop your video"}
+            <div className="space-y-4">
+              <div className="text-7xl mb-4">📹</div>
+              <p className="font-cabinet font-black text-3xl uppercase">
+                {isDragActive ? "DROP IT HERE!" : "DRAG & DROP YOUR VIDEO"}
               </p>
-              <p className="text-gray-500 text-sm">MP4, MOV, AVI, WebM supported</p>
+              <p className="font-satoshi font-bold text-gray-600 uppercase">MP4, MOV, AVI, WebM supported</p>
             </div>
           )}
         </div>
 
         {/* Progress Bar */}
         {uploading && (
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm text-gray-400">
+          <div className="space-y-2 bg-white border-4 border-black rounded p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <div className="flex justify-between font-cabinet font-black uppercase">
               <span>{stage}</span>
               <span>{progress}%</span>
             </div>
-            <div className="w-full bg-gray-800 rounded-full h-3">
+            <div className="w-full bg-gray-200 border-2 border-black rounded h-6 mt-4 shadow-inner overflow-hidden">
               <div
-                className="bg-purple-500 h-3 rounded-full transition-all duration-300"
+                className="bg-[#4dabf7] h-full border-r-2 border-black transition-all duration-300"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -162,7 +165,7 @@ export default function UploadPage() {
 
         {/* Error */}
         {error && (
-          <div className="bg-red-900/30 border border-red-500 rounded-lg px-4 py-3 text-red-300 text-sm">
+          <div className="bg-[#ff6b6b] border-4 border-black rounded p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-white font-cabinet font-bold uppercase">
             ❌ {error}
           </div>
         )}
@@ -171,21 +174,21 @@ export default function UploadPage() {
         <button
           onClick={handleUpload}
           disabled={!selectedFile || uploading}
-          className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-xl transition-colors text-lg"
+          className="w-full bg-[#4dabf7] border-4 border-black text-black font-cabinet font-black uppercase text-xl py-6 rounded shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] disabled:bg-gray-300 disabled:text-gray-500 transition-all hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]"
         >
-          {uploading ? "Uploading..." : "Upload & Analyze with AI ✨"}
+          {uploading ? "UPLOADING..." : "UPLOAD & ANALYZE WITH AI ✨"}
         </button>
 
         {/* Info boxes */}
-        <div className="grid grid-cols-3 gap-4 text-center text-sm">
+        <div className="grid grid-cols-3 gap-6 text-center">
           {[
             { icon: "☁️", label: "Stored on AWS S3" },
             { icon: "🤖", label: "Analyzed by Claude AI" },
             { icon: "📊", label: "Auto-optimized per platform" },
           ].map((item) => (
-            <div key={item.label} className="bg-gray-800/50 rounded-lg p-3">
-              <div className="text-2xl mb-1">{item.icon}</div>
-              <div className="text-gray-400">{item.label}</div>
+            <div key={item.label} className="bg-white border-2 border-black rounded p-4 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+              <div className="text-3xl mb-2">{item.icon}</div>
+              <div className="font-cabinet font-bold uppercase text-xs">{item.label}</div>
             </div>
           ))}
         </div>

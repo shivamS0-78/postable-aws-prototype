@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getConnectedAccounts, getValidAccessToken } from "@/lib/dynamo-accounts"
+import { getUserSession } from "@/lib/auth"
 import { getVideo } from "@/lib/dynamo"
 import { GetObjectCommand } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
@@ -13,14 +14,20 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "videoId and platforms are required" }, { status: 400 })
         }
 
+        const session = await getUserSession()
+        if (!session || !session.userId) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        }
+        const userId = session.userId as string
+
         // Fetch video info from DynamoDB
-        const video = await getVideo(videoId)
+        const video = await getVideo(userId, videoId)
         if (!video) {
             return NextResponse.json({ error: "Video not found" }, { status: 404 })
         }
 
         // Fetch all connected accounts (with tokens)
-        const accounts = await getConnectedAccounts()
+        const accounts = await getConnectedAccounts(userId)
 
         // Helper to safely parse stringified platform JSON from DynamoDB
         const parseMeta = (str: string | undefined | null) => {
@@ -49,7 +56,7 @@ export async function POST(req: NextRequest) {
                     // Step 0: Get a valid (non-expired) access token
                     let accessToken: string
                     try {
-                        accessToken = await getValidAccessToken(account)
+                        accessToken = await getValidAccessToken(userId, account)
                     } catch (tokenErr: any) {
                         results[platform] = { success: false, message: `Authentication failed: ${tokenErr.message}. Please reconnect your YouTube account in Settings.` }
                         continue
@@ -131,7 +138,7 @@ export async function POST(req: NextRequest) {
                     // Step 0: Get valid token
                     let accessToken: string
                     try {
-                        accessToken = await getValidAccessToken(account)
+                        accessToken = await getValidAccessToken(userId, account)
                     } catch (tokenErr: any) {
                         results[platform] = { success: false, message: `Authentication failed: ${tokenErr.message}. Please reconnect your Instagram account.` }
                         continue
@@ -232,7 +239,7 @@ export async function POST(req: NextRequest) {
                     // LinkedIn video upload requires registerUpload + PUT flow
                     let accessToken: string
                     try {
-                        accessToken = await getValidAccessToken(account)
+                        accessToken = await getValidAccessToken(userId, account)
                     } catch (tokenErr: any) {
                         results[platform] = { success: false, message: `Authentication failed: ${tokenErr.message}. Please reconnect your LinkedIn account.` }
                         continue

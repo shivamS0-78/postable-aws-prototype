@@ -132,48 +132,48 @@ function SettingsContent() {
     const connectedCount = connectedAccounts.length
 
     return (
-        <div className="min-h-screen bg-gray-950 text-white">
+        <div className="min-h-screen bg-[#f4f4f0] text-black font-satoshi selection:bg-[#ff6b6b] selection:text-white">
             {/* Toast Notification */}
             {toast && (
-                <div className={`fixed top-4 right-4 z-50 px-5 py-3 rounded-xl border text-sm font-medium shadow-lg transition-all animate-in slide-in-from-right ${toast.type === "success"
-                    ? "bg-green-900/80 border-green-600 text-green-200"
-                    : "bg-red-900/80 border-red-600 text-red-200"
+                <div className={`fixed top-4 right-4 z-50 px-6 py-4 rounded border-4 border-black font-cabinet font-bold uppercase text-sm shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all animate-in slide-in-from-right ${toast.type === "success"
+                    ? "bg-[#b5e550] text-black"
+                    : "bg-[#ff6b6b] text-white"
                     }`}>
                     {toast.message}
                 </div>
             )}
 
             {/* Header */}
-            <div className="border-b border-gray-800 px-6 py-4">
-                <div className="max-w-4xl mx-auto flex items-center gap-3">
+            <div className="border-b-4 border-black bg-white px-6 py-4">
+                <div className="max-w-4xl mx-auto flex items-center gap-4">
                     <button
                         onClick={() => router.push("/")}
-                        className="text-gray-400 hover:text-white text-sm transition-colors"
+                        className="bg-white border-2 border-black text-black font-cabinet font-bold uppercase text-sm px-4 py-2 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
                     >
                         ← Back
                     </button>
-                    <div className="flex items-center gap-2">
-                        <span className="text-xl">⚙️</span>
-                        <h1 className="text-xl font-bold text-purple-400">Settings</h1>
+                    <div className="flex items-center gap-3">
+                        <span className="text-2xl">⚙️</span>
+                        <h1 className="text-2xl font-black font-cabinet uppercase tracking-wide">Settings</h1>
                     </div>
                 </div>
             </div>
 
-            <div className="max-w-4xl mx-auto px-6 py-10 space-y-8">
+            <div className="max-w-4xl mx-auto px-6 py-10 space-y-10">
                 {/* Connected Accounts Section */}
                 <div>
-                    <div className="flex items-center justify-between mb-2">
-                        <h2 className="text-lg font-semibold text-gray-200">Connected Accounts</h2>
-                        <span className="text-xs bg-gray-800 text-gray-400 px-3 py-1 rounded-full border border-gray-700">
+                    <div className="flex items-center justify-between mb-4 border-b-4 border-black pb-2">
+                        <h2 className="text-2xl font-black font-cabinet uppercase">Connected Accounts</h2>
+                        <span className="text-sm bg-[#ff6b6b] text-white font-bold font-cabinet uppercase px-3 py-1 rounded border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                             {connectedCount}/{platformConfigs.length} connected
                         </span>
                     </div>
-                    <p className="text-gray-500 text-sm mb-6">
-                        Link your social media accounts to enable one-click publishing from ClipFlow.
+                    <p className="text-gray-600 font-medium text-sm mb-8">
+                        Link your social media accounts to enable one-click publishing from POSTABLE.
                     </p>
 
                     {loading ? (
-                        <div className="text-center py-12 text-gray-500">Loading accounts...</div>
+                        <div className="text-center py-12 font-cabinet font-bold uppercase text-xl animate-pulse">Loading accounts...</div>
                     ) : (
                         <div className="space-y-4">
                             {platformConfigs.map((config) => {
@@ -182,61 +182,55 @@ function SettingsContent() {
                                 return (
                                     <div
                                         key={config.id}
-                                        className={`bg-gray-800/50 border rounded-xl p-5 transition-all ${connected
-                                            ? `${config.borderColor} ${config.bgColor}`
-                                            : `border-gray-700 ${config.hoverColor}`
-                                            }`}
+                                        className={`bg-white border-4 border-black rounded p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-between ${connected ? "" : ""}`}
                                     >
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-4">
-                                                {/* Platform Icon */}
-                                                <div
-                                                    className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${connected ? config.bgColor : "bg-gray-700/50"
-                                                        }`}
-                                                >
-                                                    {config.icon}
-                                                </div>
-
-                                                {/* Platform Info */}
-                                                <div>
-                                                    <div className="flex items-center gap-2">
-                                                        <h3 className={`font-semibold ${connected ? config.color : "text-white"}`}>
-                                                            {config.platform}
-                                                        </h3>
-                                                        {connected && (
-                                                            <span className="text-xs bg-green-500/20 text-green-300 px-2 py-0.5 rounded-full border border-green-700 flex items-center gap-1">
-                                                                <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                                                                Connected
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                    <p className="text-gray-500 text-sm mt-0.5">
-                                                        {connected
-                                                            ? `Signed in as ${accountInfo?.username}`
-                                                            : config.description}
-                                                    </p>
-                                                </div>
+                                        <div className="flex items-center gap-6">
+                                            {/* Platform Icon */}
+                                            <div
+                                                className={`w-16 h-16 border-2 border-black rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center text-3xl ${connected ? config.bgColor : "bg-gray-100"
+                                                    }`}
+                                            >
+                                                {config.icon}
                                             </div>
 
-                                            {/* Connect/Disconnect Button */}
+                                            {/* Platform Info */}
                                             <div>
-                                                {connected ? (
-                                                    <button
-                                                        onClick={() => handleDisconnect(config.id)}
-                                                        disabled={disconnectingId === config.id}
-                                                        className="px-4 py-2 rounded-lg text-sm font-medium text-red-400 border border-red-500/30 hover:bg-red-500/10 transition-all disabled:opacity-50"
-                                                    >
-                                                        {disconnectingId === config.id ? "Disconnecting..." : "Disconnect"}
-                                                    </button>
-                                                ) : (
-                                                    <button
-                                                        onClick={() => handleConnect(config.id)}
-                                                        className="px-4 py-2 rounded-lg text-sm font-medium bg-purple-600 hover:bg-purple-700 text-white transition-all flex items-center gap-2"
-                                                    >
-                                                        Connect
-                                                    </button>
-                                                )}
+                                                <div className="flex items-center gap-3 mb-1">
+                                                    <h3 className={`font-cabinet font-black text-xl uppercase tracking-tighter ${connected ? config.color : "text-black"}`}>
+                                                        {config.platform}
+                                                    </h3>
+                                                    {connected && (
+                                                        <span className="text-xs bg-[#b5e550] text-black font-bold uppercase px-2 py-0.5 rounded border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] flex items-center gap-1">
+                                                            Connected
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <p className="text-gray-600 font-medium text-sm">
+                                                    {connected
+                                                        ? `Signed in as ${accountInfo?.username}`
+                                                        : config.description}
+                                                </p>
                                             </div>
+                                        </div>
+
+                                        {/* Connect/Disconnect Button */}
+                                        <div>
+                                            {connected ? (
+                                                <button
+                                                    onClick={() => handleDisconnect(config.id)}
+                                                    disabled={disconnectingId === config.id}
+                                                    className="px-6 py-3 rounded border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-white hover:bg-[#ff6b6b] hover:text-white font-cabinet font-bold uppercase text-sm transition-all disabled:opacity-50"
+                                                >
+                                                    {disconnectingId === config.id ? "Working..." : "Disconnect"}
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    onClick={() => handleConnect(config.id)}
+                                                    className="px-6 py-3 rounded border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-[#4dabf7] text-white font-cabinet font-bold uppercase text-sm hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                                >
+                                                    Connect →
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
                                 )
@@ -246,13 +240,13 @@ function SettingsContent() {
                 </div>
 
                 {/* Info Box */}
-                <div className="border border-gray-700 rounded-xl p-5 bg-gray-800/30">
-                    <div className="flex items-start gap-3">
-                        <span className="text-xl mt-0.5">🔒</span>
+                <div className="bg-[#b5e550] border-4 border-black rounded p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                    <div className="flex items-start gap-4">
+                        <span className="text-3xl">🔒</span>
                         <div>
-                            <h4 className="font-medium text-gray-200 text-sm">Secure OAuth Authentication</h4>
-                            <p className="text-gray-500 text-sm mt-1">
-                                ClipFlow uses industry-standard OAuth 2.0 to securely connect your accounts.
+                            <h4 className="font-cabinet font-black uppercase text-xl mb-2">Secure OAuth Authentication</h4>
+                            <p className="font-satoshi font-medium text-black/80">
+                                POSTABLE uses industry-standard OAuth 2.0 to securely connect your accounts.
                                 We never store your passwords — only revocable access tokens with minimal permissions required for publishing.
                             </p>
                         </div>
@@ -260,10 +254,8 @@ function SettingsContent() {
                 </div>
 
                 {/* AWS Badge */}
-                <div className="border border-gray-700 rounded-xl p-4 bg-gray-800/30">
-                    <p className="text-xs text-gray-500 text-center">
-                        🏗️ Built on AWS: <span className="text-gray-400">S3 (Storage) • DynamoDB (Database) • Bedrock/Claude (AI) • Transcribe (Speech-to-Text) • Lambda (Processing) • Amplify (Hosting)</span>
-                    </p>
+                <div className="bg-white border-4 border-black rounded p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center font-cabinet font-bold uppercase text-sm">
+                    🏗️ Built on AWS: S3 (Storage) • DynamoDB (Database) • Bedrock/Claude (AI) • Transcribe (Speech-to-Text) • Lambda (Processing) • Amplify (Hosting)
                 </div>
             </div>
         </div>
@@ -272,7 +264,7 @@ function SettingsContent() {
 
 export default function SettingsPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen bg-gray-950 text-white flex items-center justify-center"><p className="text-gray-500">Loading settings...</p></div>}>
+        <Suspense fallback={<div className="min-h-screen bg-[#f4f4f0] text-black flex items-center justify-center"><p className="font-cabinet font-bold uppercase animate-pulse">Loading settings...</p></div>}>
             <SettingsContent />
         </Suspense>
     )

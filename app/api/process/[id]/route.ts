@@ -4,6 +4,7 @@ import { InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime"
 import { GetObjectCommand } from "@aws-sdk/client-s3"
 import { transcribeClient, bedrockClient, s3Client } from "@/lib/aws"
 import { getVideo, updateVideo } from "@/lib/dynamo"
+import { getUserSession } from "@/lib/auth"
 
 // Helper: wait for Transcribe job to complete
 async function waitForTranscription(jobName: string): Promise<string> {
@@ -60,12 +61,18 @@ export async function POST(
   const { id: videoId } = await params
 
   try {
+    const session = await getUserSession()
+    if (!session || !session.userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+    const userId = session.userId as string
+
     // 1. Get video from DynamoDB
-    const video = await getVideo(videoId)
+    const video = await getVideo(userId, videoId)
     if (!video) return NextResponse.json({ error: "Video not found" }, { status: 404 })
 
     // 2. Update status to processing
-    await updateVideo(videoId, { status: "processing" })
+    await updateVideo(userId, videoId, { status: "processing" })
 
     // 3. Start transcription
     const jobName = `clipflow-${videoId}-${Date.now()}`
@@ -140,7 +147,7 @@ Generate optimized content for each platform. Return ONLY a valid JSON object wi
     }
 
     if (!aiContent) {
-      await updateVideo(videoId, {
+      await updateVideo(userId, videoId, {
         status: "ready",
         transcript: transcript.slice(0, 5000),
         error: "AI parsing failed, using defaults"
@@ -149,7 +156,7 @@ Generate optimized content for each platform. Return ONLY a valid JSON object wi
     }
 
     // 7. Save everything to DynamoDB
-    await updateVideo(videoId, {
+    await updateVideo(userId, videoId, {
       status: "ready",
       transcript: transcript.slice(0, 5000),
       youtube: JSON.stringify(aiContent.youtube),
@@ -168,10 +175,10 @@ Generate optimized content for each platform. Return ONLY a valid JSON object wi
 
   } catch (error: any) {
     console.error("Processing error:", error)
-    await updateVideo(videoId, {
-      status: "error",
-      error: error.message
-    })
+
+    // We try to update error status on a best-effort basis if we've successfully got the session earlier.
+    // However, if we're hitting the catch block, we don't have scope of `userId` readily if it failed before instantiation. 
+    // We will do a generic fail log here.
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }

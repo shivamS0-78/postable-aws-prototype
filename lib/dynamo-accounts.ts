@@ -1,7 +1,7 @@
 import { PutCommand, ScanCommand, DeleteCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb"
 import { dynamoDocClient } from "./aws"
 
-const TABLE = process.env.DYNAMODB_ACCOUNTS_TABLE || "postable-connected-accounts"
+const TABLE = process.env.DYNAMODB_ACCOUNTS_TABLE || "postable-users-accounts"
 
 export interface ConnectedAccountRecord {
     platform: string        // "youtube" | "instagram" | "linkedin"
@@ -13,24 +13,28 @@ export interface ConnectedAccountRecord {
     connectedAt: string
 }
 
-export async function saveConnectedAccount(account: ConnectedAccountRecord) {
+export async function saveConnectedAccount(userId: string, account: ConnectedAccountRecord) {
     await dynamoDocClient.send(new PutCommand({
         TableName: TABLE,
-        Item: account,
+        Item: { ...account, userId }, // Inject the partition key
     }))
 }
 
-export async function getConnectedAccounts(): Promise<ConnectedAccountRecord[]> {
+export async function getConnectedAccounts(userId: string): Promise<ConnectedAccountRecord[]> {
     const result = await dynamoDocClient.send(new ScanCommand({
         TableName: TABLE,
+        FilterExpression: "userId = :uid",
+        ExpressionAttributeValues: {
+            ":uid": userId
+        }
     }))
     return (result.Items || []) as ConnectedAccountRecord[]
 }
 
-export async function deleteConnectedAccount(platform: string) {
+export async function deleteConnectedAccount(userId: string, platform: string) {
     await dynamoDocClient.send(new DeleteCommand({
         TableName: TABLE,
-        Key: { platform },
+        Key: { userId, platform }, // Composite key
     }))
 }
 
@@ -48,11 +52,11 @@ function isTokenExpired(tokenExpiry?: string): boolean {
 /**
  * Updates the access token and expiry in DynamoDB for a platform.
  */
-async function updateAccessToken(platform: string, accessToken: string, expiresIn: number) {
+async function updateAccessToken(userId: string, platform: string, accessToken: string, expiresIn: number) {
     const newExpiry = new Date(Date.now() + expiresIn * 1000).toISOString()
     await dynamoDocClient.send(new UpdateCommand({
         TableName: TABLE,
-        Key: { platform },
+        Key: { userId, platform },
         UpdateExpression: "SET accessToken = :at, tokenExpiry = :te",
         ExpressionAttributeValues: {
             ":at": accessToken,
@@ -91,7 +95,7 @@ async function refreshGoogleAccessToken(refreshToken: string): Promise<{ access_
  * Returns a valid (non-expired) access token for the given account.
  * Automatically refreshes the token if expired and updates DynamoDB.
  */
-export async function getValidAccessToken(account: ConnectedAccountRecord): Promise<string> {
+export async function getValidAccessToken(userId: string, account: ConnectedAccountRecord): Promise<string> {
     // If token is still valid, return it directly
     if (!isTokenExpired(account.tokenExpiry)) {
         return account.accessToken
@@ -102,12 +106,12 @@ export async function getValidAccessToken(account: ConnectedAccountRecord): Prom
         throw new Error(`Access token expired for ${account.platform} and no refresh token available. Please reconnect the account in Settings.`)
     }
 
-    console.log(`[Token Refresh] Refreshing expired ${account.platform} access token...`)
+    console.log(`[Token Refresh] Refreshing expired ${account.platform} access token for user ${userId}...`)
 
     if (account.platform === "youtube") {
         const { access_token, expires_in } = await refreshGoogleAccessToken(account.refreshToken)
         // Update in DynamoDB so we don't need to refresh again next time
-        await updateAccessToken(account.platform, access_token, expires_in)
+        await updateAccessToken(userId, account.platform, access_token, expires_in)
         console.log(`[Token Refresh] Successfully refreshed ${account.platform} token, expires in ${expires_in}s`)
         return access_token
     }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getVideo, deleteVideo } from "@/lib/dynamo"
+import { getUserSession } from "@/lib/auth"
 import { s3Client } from "@/lib/aws"
 import { DeleteObjectCommand } from "@aws-sdk/client-s3"
 
@@ -10,8 +11,13 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const session = await getUserSession()
+    if (!session || !session.userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
     const { id } = await params
-    const video = await getVideo(id)
+    const video = await getVideo(session.userId as string, id)
     if (!video) {
       return NextResponse.json({ error: "Video not found" }, { status: 404 })
     }
@@ -26,8 +32,13 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const session = await getUserSession()
+    if (!session || !session.userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
     const { id } = await params
-    const video = await getVideo(id)
+    const video = await getVideo(session.userId as string, id)
     if (!video) {
       return NextResponse.json({ error: "Video not found" }, { status: 404 })
     }
@@ -41,7 +52,7 @@ export async function DELETE(
     }
 
     // Delete from DynamoDB
-    await deleteVideo(id)
+    await deleteVideo(session.userId as string, id)
 
     return NextResponse.json({ success: true })
   } catch (error: any) {
