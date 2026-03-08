@@ -5,13 +5,13 @@ import { BedrockRuntimeClient } from "@aws-sdk/client-bedrock-runtime"
 import { TranscribeClient } from "@aws-sdk/client-transcribe"
 
 const credentials = {
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  accessKeyId: process.env.MY_AWS_ACCESS_KEY_ID!,
+  secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY!,
 }
 
 // S3 & DynamoDB use the main region (where your buckets/tables live)
 const mainConfig = {
-  region: process.env.AWS_REGION || "eu-north-1",
+  region: process.env.MY_AWS_REGION || "eu-north-1",
   credentials,
 }
 
