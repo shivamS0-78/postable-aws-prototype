@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getVideo, updateVideo } from "@/lib/dynamo"
+import { getUserSession } from "@/lib/auth"
 
 function generateAnalytics(viralScore: number) {
   const multiplier = viralScore / 50
@@ -11,13 +12,7 @@ function generateAnalytics(viralScore: number) {
       shares: Math.floor(200 * multiplier + Math.random() * 100),
       watchTime: Math.floor(65 + Math.random() * 20),
     },
-    tiktok: {
-      views: Math.floor(45000 * multiplier + Math.random() * 20000),
-      likes: Math.floor(3200 * multiplier + Math.random() * 1000),
-      comments: Math.floor(450 * multiplier + Math.random() * 100),
-      shares: Math.floor(800 * multiplier + Math.random() * 300),
-      watchTime: Math.floor(55 + Math.random() * 30),
-    },
+
     instagram: {
       views: Math.floor(12000 * multiplier + Math.random() * 3000),
       likes: Math.floor(1100 * multiplier + Math.random() * 400),
@@ -52,15 +47,21 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const session = await getUserSession()
+    if (!session || !session.userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+    const userId = session.userId as string
+
     const { id } = await params
-    const video = await getVideo(id)
+    const video = await getVideo(userId, id)
     if (!video) return NextResponse.json({ error: "Not found" }, { status: 404 })
 
     let analytics = video.analyticsData ? JSON.parse(video.analyticsData) : null
 
     if (!analytics && video.status === "ready") {
       analytics = generateAnalytics(video.viralScore || 50)
-      await updateVideo(id, {
+      await updateVideo(userId, id, {
         analyticsData: JSON.stringify(analytics),
         status: "published"
       })

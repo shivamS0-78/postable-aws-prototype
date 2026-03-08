@@ -7,66 +7,50 @@ import { getUserSession } from "@/lib/auth"
 
 async function generateThumbnail(prompt: string): Promise<Buffer> {
     const modelId = process.env.BEDROCK_IMAGE_MODEL || "amazon.nova-canvas-v1:0"
-    console.log(`Generating thumbnail with model: ${modelId}`)
+    console.log(`[Thumbnail] Invoking model: ${modelId}`)
 
-    const isNovaCanvas = modelId.startsWith("amazon.nova-canvas")
-
-    let requestBody: any
-
-    if (isNovaCanvas) {
-        requestBody = {
-            taskType: "TEXT_IMAGE",
-            textToImageParams: {
-                text: prompt.trim(),
-            },
-            imageGenerationConfig: {
-                numberOfImages: 1,
-                quality: "premium",
-                height: 720,
-                width: 1280,
-                cfgScale: 8.0,
-                seed: Math.floor(Math.random() * 100000)
-            }
-        }
-    } else {
-        requestBody = {
-            taskType: "TEXT_IMAGE",
-            textToImageParams: {
-                text: prompt.trim(),
-            },
-            imageGenerationConfig: {
-                numberOfImages: 1,
-                quality: "premium",
-                height: 720,
-                width: 1280,
-                cfgScale: 8.0,
-                seed: Math.floor(Math.random() * 100000)
-            }
+    const requestBody = {
+        taskType: "TEXT_IMAGE",
+        textToImageParams: {
+            text: prompt.trim(),
+        },
+        imageGenerationConfig: {
+            numberOfImages: 1,
+            quality: "premium",
+            height: 720,
+            width: 1280,
+            cfgScale: 8.0,
+            seed: Math.floor(Math.random() * 100000)
         }
     }
 
-    const response = await bedrockClient.send(new InvokeModelCommand({
-        modelId,
-        contentType: "application/json",
-        accept: "application/json",
-        body: JSON.stringify(requestBody)
-    }))
+    try {
+        const response = await bedrockClient.send(new InvokeModelCommand({
+            modelId,
+            contentType: "application/json",
+            accept: "application/json",
+            body: JSON.stringify(requestBody)
+        }))
 
-    const result = JSON.parse(Buffer.from(response.body).toString())
-    if (!result.images || result.images.length === 0) {
-        throw new Error("No images returned from Bedrock")
+        const result = JSON.parse(Buffer.from(response.body).toString())
+        if (!result.images || result.images.length === 0) {
+            console.error("[Thumbnail] Bedrock returned no images. Result:", result)
+            throw new Error("No images returned from Bedrock")
+        }
+        const base64Image = result.images[0]
+        return Buffer.from(base64Image, 'base64')
+    } catch (err: any) {
+        console.error("[Thumbnail] Bedrock InvokeModel CRITICAL ERROR:", err)
+        throw err
     }
-    const base64Image = result.images[0]
-    return Buffer.from(base64Image, 'base64')
 }
 
 export async function POST(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    const { id: videoId } = await params
-
     try {
+        const { id: videoId } = await params
         const session = await getUserSession()
         if (!session || !session.userId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
@@ -82,6 +66,7 @@ export async function POST(
         Themes: ${themes.slice(0, 3).join(", ") || "General"}. 
         Style: Vibrant, engaging, centered composition, no text.`
 
+        console.log(`[Thumbnail] Generating for video: ${videoId}`)
         const thumbBuffer = await generateThumbnail(thumbPrompt)
         const thumbKey = `thumbnails/${videoId}-${Date.now()}.png`
 
@@ -93,10 +78,14 @@ export async function POST(
         }))
 
         await updateVideo(userId, videoId, { thumbnailUrl: thumbKey })
+        console.log(`[Thumbnail] Success! Saved to: ${thumbKey}`)
 
         return NextResponse.json({ success: true, thumbnailUrl: thumbKey })
     } catch (error: any) {
-        console.error("Manual thumbnail generation error:", error)
-        return NextResponse.json({ error: error.message }, { status: 500 })
+        console.error("[Thumbnail] POST Error:", error)
+        return NextResponse.json({
+            error: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        }, { status: 500 })
     }
 }
