@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
       linkedin: null,
       hashtags: null,
       transcript: null,
+      thumbnailUrl: null,
     }
 
     await saveVideo(session.userId as string, video)

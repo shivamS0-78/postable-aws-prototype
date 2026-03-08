@@ -20,6 +20,7 @@ interface Video {
   hashtags: string
   keyMoments: string
   transcript: string
+  thumbnailUrl: string
 }
 
 const PLATFORMS = ["youtube", "instagram", "twitter", "linkedin"]
@@ -225,6 +226,41 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
               {video.viralReasoning && (
                 <p className={`text-sm font-satoshi font-bold leading-relaxed ${viralScore < 40 ? "text-white" : "text-main"}`}>{video.viralReasoning}</p>
               )}
+            </div>
+
+            {/* Thumbnail */}
+            <div className="bg-card border-4 border-main rounded shadow-[8px_8px_0px_0px_var(--shadow-main)] overflow-hidden group">
+              <div className="aspect-video bg-page relative flex items-center justify-center border-b-4 border-main overflow-hidden">
+                {video.thumbnailUrl ? (
+                  <img src={`/api/thumbnails?key=${video.thumbnailUrl}`} alt="AI Generated Thumbnail" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                ) : (
+                  <div className="text-center p-6 space-y-2">
+                    <span className="text-4xl block">🖼️</span>
+                    <p className="text-xs font-cabinet font-black uppercase text-gray-400">Thumbnail Generating...</p>
+                  </div>
+                )}
+                <div className="absolute top-3 right-3">
+                  <span className="bg-[#b5e550] text-main border-2 border-main px-2 py-1 rounded text-[10px] font-cabinet font-black uppercase shadow-[2px_2px_0px_0px_var(--shadow-main)]">AI Generated</span>
+                </div>
+              </div>
+              <div className="p-4">
+                <button
+                  disabled={loading}
+                  onClick={async () => {
+                    setLoading(true);
+                    try {
+                      await axios.post(`/api/process/${video.id}/thumbnail`);
+                      window.location.reload();
+                    } catch (err) {
+                      console.error(err);
+                      setLoading(false);
+                    }
+                  }}
+                  className="w-full bg-[#4dabf7] text-white border-2 border-main py-2 rounded font-cabinet font-black uppercase text-xs shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:shadow-[4px_4px_0px_0px_var(--shadow-main)] hover:-translate-y-1 transition-all flex items-center justify-center gap-2"
+                >
+                  <span>✨ Regenerate AI Thumbnail</span>
+                </button>
+              </div>
             </div>
 
             {/* Improvements */}

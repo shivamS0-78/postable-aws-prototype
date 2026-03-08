@@ -127,7 +127,35 @@ export async function POST(req: NextRequest) {
 
                     if (uploadRes.ok) {
                         const ytData = await uploadRes.json()
-                        results[platform] = { success: true, message: `Published! Video ID: ${ytData.id}` }
+                        const youtubeVideoId = ytData.id
+                        results[platform] = { success: true, message: `Published! Video ID: ${youtubeVideoId}` }
+
+                        // Step 4: Upload Thumbnail to YouTube (New)
+                        if (video.thumbnailUrl) {
+                            try {
+                                const thumbS3Res = await s3Client.send(new GetObjectCommand({
+                                    Bucket: process.env.S3_BUCKET_NAME!,
+                                    Key: video.thumbnailUrl,
+                                }))
+                                const thumbBytes = await thumbS3Res.Body?.transformToByteArray()
+                                if (thumbBytes) {
+                                    // YouTube Thumbnails: SET
+                                    await fetch(
+                                        `https://www.googleapis.com/upload/youtube/v3/thumbnails/set?videoId=${youtubeVideoId}`,
+                                        {
+                                            method: "POST",
+                                            headers: {
+                                                Authorization: `Bearer ${accessToken}`,
+                                                "Content-Type": "image/png",
+                                            },
+                                            body: Buffer.from(thumbBytes),
+                                        }
+                                    )
+                                }
+                            } catch (thumbError) {
+                                console.error("YouTube thumbnail upload failed:", thumbError)
+                            }
+                        }
                     } else {
                         const errText = await uploadRes.text()
                         results[platform] = { success: false, message: `Upload failed: ${uploadRes.status} - ${errText}` }
