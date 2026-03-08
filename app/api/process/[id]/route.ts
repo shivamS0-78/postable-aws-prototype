@@ -104,10 +104,6 @@ Generate optimized content for each platform. Return ONLY a valid JSON object wi
     "description": "detailed YouTube description 150-200 words with value, timestamps mentioned, and call to action",
     "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"]
   },
-  "tiktok": {
-    "caption": "punchy TikTok caption under 150 chars with hook",
-    "hooks": ["opening hook option 1", "opening hook option 2"]
-  },
   "instagram": {
     "caption": "Instagram caption 100-150 words with storytelling and line breaks",
     "reels_caption": "short punchy version under 100 chars for Reels"
@@ -160,7 +156,6 @@ Generate optimized content for each platform. Return ONLY a valid JSON object wi
       status: "ready",
       transcript: transcript.slice(0, 5000),
       youtube: JSON.stringify(aiContent.youtube),
-      tiktok: JSON.stringify(aiContent.tiktok),
       instagram: JSON.stringify(aiContent.instagram),
       twitter: JSON.stringify(aiContent.twitter),
       linkedin: JSON.stringify(aiContent.linkedin),

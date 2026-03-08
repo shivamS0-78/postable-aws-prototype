@@ -9,10 +9,10 @@ import {
 } from "recharts"
 
 const PLATFORM_ICONS: any = {
-  youtube: "🎬", tiktok: "🎵", instagram: "📸", twitter: "🐦", linkedin: "💼"
+  youtube: "🎬", instagram: "📸", twitter: "🐦", linkedin: "💼"
 }
 const PLATFORM_COLORS: any = {
-  youtube: "#ef4444", tiktok: "#ec4899", instagram: "#f97316",
+  youtube: "#ef4444", instagram: "#f97316",
   twitter: "#38bdf8", linkedin: "#3b82f6"
 }
 
@@ -46,7 +46,7 @@ export default function AnalyticsPage({ params }: { params: { id: string } }) {
   )
 
   const { analytics, video } = data
-  const platforms = ["youtube", "tiktok", "instagram", "twitter", "linkedin"]
+  const platforms = ["youtube", "instagram", "twitter", "linkedin"]
 
   const totalViews = platforms.reduce((sum, p) => sum + (analytics[p]?.views || 0), 0)
   const totalLikes = platforms.reduce((sum, p) => sum + (analytics[p]?.likes || 0), 0)

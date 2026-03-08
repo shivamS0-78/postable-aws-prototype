@@ -14,7 +14,6 @@ interface Video {
   viralReasoning: string
   viralImprovements: string
   youtube: string
-  tiktok: string
   instagram: string
   twitter: string
   linkedin: string
@@ -23,17 +22,15 @@ interface Video {
   transcript: string
 }
 
-const PLATFORMS = ["youtube", "tiktok", "instagram", "twitter", "linkedin"]
+const PLATFORMS = ["youtube", "instagram", "twitter", "linkedin"]
 const PLATFORM_ICONS: any = {
   youtube: "/logos/youtube.png",
-  tiktok: "🎵",
   instagram: "/logos/instagram.png",
   twitter: "🐦",
   linkedin: "/logos/linkedin.png"
 }
 const PLATFORM_COLORS: any = {
   youtube: "bg-[#ff6b6b]",
-  tiktok: "bg-card",
   instagram: "bg-[#ffe066]",
   twitter: "bg-[#4dabf7]",
   linkedin: "bg-[#b5e550]"
@@ -194,17 +191,11 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
           </div>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => router.push(`/analytics/${id}`)}
-              className="text-sm font-cabinet font-black uppercase text-main bg-card border-2 border-main shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_var(--shadow-main)] px-4 py-3 rounded transition-all"
-            >
-              📊 Analytics
-            </button>
-            <button
               onClick={handlePublish}
               disabled={published}
               className={`text-sm font-cabinet font-black uppercase border-2 border-main shadow-[2px_2px_0px_0px_var(--shadow-main)] px-5 py-3 rounded transition-all ${published ? "bg-[#b5e550] text-main cursor-not-allowed" : "bg-card hover:bg-[#ff6b6b] hover:text-white hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_var(--shadow-main)]"}`}
             >
-              {published ? "✅ Scheduled!" : "Approve & Schedule →"}
+              {published ? "✅ Approved!" : "Approve →"}
             </button>
           </div>
         </div>
@@ -212,7 +203,7 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
         {/* Published Banner */}
         {published && (
           <div className="mb-6 bg-[#b5e550] border-4 border-main p-4 rounded text-center text-main font-cabinet font-black uppercase tracking-wide shadow-[4px_4px_0px_0px_var(--shadow-main)]">
-            🎉 Content approved and scheduled for posting across all selected platforms!
+            🎉 Content approved and ready to be scheduled for posting across all selected platforms!
           </div>
         )}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -298,7 +289,7 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
                     }`}
                 >
                   {PLATFORM_ICONS[platform].startsWith("/") ? (
-                    <img src={PLATFORM_ICONS[platform]} alt={platform} className="w-4 h-4 object-contain" />
+                    <img src={PLATFORM_ICONS[platform]} alt={platform} className="w-6 h-6 object-contain" />
                   ) : (
                     PLATFORM_ICONS[platform]
                   )}
@@ -317,7 +308,7 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
                   <div className="flex items-center gap-3 pb-4 border-b-4 border-main">
                     <span className="text-3xl bg-card border-2 border-main rounded flex items-center justify-center w-12 h-12 shadow-[2px_2px_0px_0px_var(--shadow-main)]">
                       {PLATFORM_ICONS[platform].startsWith("/") ? (
-                        <img src={PLATFORM_ICONS[platform]} alt={platform} className="w-8 h-8 object-contain" />
+                        <img src={PLATFORM_ICONS[platform]} alt={platform} className="w-12 h-12 object-contain" />
                       ) : (
                         PLATFORM_ICONS[platform]
                       )}
@@ -348,32 +339,6 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
                           rows={6}
                         />
                       </div>
-                    </>
-                  )}
-
-                  {platform === "tiktok" && content && (
-                    <>
-                      <div>
-                        <label className="text-sm font-cabinet font-black text-main uppercase mb-2 block">Caption</label>
-                        <textarea
-                          value={getEditableContent(platform, "caption")}
-                          onChange={e => setEditable(platform, "caption", e.target.value)}
-                          className="w-full bg-page border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
-                          rows={3}
-                        />
-                      </div>
-                      {content.hooks && (
-                        <div>
-                          <label className="text-sm font-cabinet font-black text-main uppercase mb-2 block">Hook Options</label>
-                          <div className="space-y-3">
-                            {content.hooks.map((hook: string, i: number) => (
-                              <div key={i} className="bg-card border-2 border-main shadow-[2px_2px_0px_0px_var(--shadow-main)] rounded p-3 text-sm font-satoshi font-bold text-main">
-                                {hook}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
                     </>
                   )}
 
@@ -438,6 +403,6 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
           </div>
         </div>
       </div>
-    </div>
+    </div >
   )
 }

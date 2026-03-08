@@ -20,7 +20,6 @@ export async function POST(req: NextRequest) {
       createdAt: new Date().toISOString(),
       viralScore: null,
       youtube: null,
-      tiktok: null,
       instagram: null,
       twitter: null,
       linkedin: null,

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getUserSession } from "@/lib/auth"
 import { getConnectedAccounts, getValidAccessToken } from "@/lib/dynamo-accounts"
+import { getAllVideos } from "@/lib/dynamo"
 import { InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime"
 import { bedrockClient } from "@/lib/aws"
 import * as fs from 'fs'
@@ -143,22 +144,44 @@ export async function GET(req: NextRequest) {
             ]
         }
 
-        // Top clips (synthesized dynamically from actual metrics or 0 if none)
-        const topClips = [
-            { title: 'AI Workspace Setup', platform: activePlatforms[0] || 'YouTube', views: formatNumber(Math.floor(totalViews * 0.4)), engagement: '14%' },
-            { title: 'Neon Coding Flow', platform: activePlatforms[1] || 'Instagram', views: formatNumber(Math.floor(totalViews * 0.3)), engagement: '11%' },
-            { title: 'Tech Career Advice', platform: activePlatforms[2] || 'LinkedIn', views: formatNumber(Math.floor(totalViews * 0.2)), engagement: '18%' },
-            { title: 'Late Night Debugging', platform: activePlatforms[0] || 'YouTube', views: formatNumber(Math.floor(totalViews * 0.1)), engagement: '6%' },
-        ]
+        // Fetch user's actual videos for top clips and AI prediction
+        const allVideos = await getAllVideos(userId);
+        const sortedVideos = allVideos
+            .sort((a: any, b: any) => (b.viralScore || 0) - (a.viralScore || 0));
 
-        // Generate AI Insights via Amazon Bedrock (or fallback if it fails)
+        // Top clips (synthesized dynamically from actual clips or fallback to defaults)
+        let topClips = [];
+        if (sortedVideos.length > 0) {
+            topClips = sortedVideos.map((vid: any, idx: number) => {
+                const viewsPct = [0.4, 0.3, 0.2, 0.1][idx] || 0.05;
+                const platform = activePlatforms[idx % activePlatforms.length] || 'YouTube';
+                return {
+                    title: vid.title || 'Untitled Clip',
+                    platform,
+                    views: formatNumber(Math.floor(totalViews * viewsPct)),
+                    engagement: `${Math.ceil((vid.viralScore || 50) / 5)}%`,
+                    score: vid.viralScore
+                };
+            });
+        } else {
+            topClips = [
+                { title: 'AI Workspace Setup', platform: activePlatforms[0] || 'YouTube', views: formatNumber(Math.floor(totalViews * 0.4)), engagement: '14%' },
+                { title: 'Neon Coding Flow', platform: activePlatforms[1] || 'Instagram', views: formatNumber(Math.floor(totalViews * 0.3)), engagement: '11%' },
+                { title: 'Tech Career Advice', platform: activePlatforms[2] || 'LinkedIn', views: formatNumber(Math.floor(totalViews * 0.2)), engagement: '18%' },
+                { title: 'Late Night Debugging', platform: activePlatforms[0] || 'YouTube', views: formatNumber(Math.floor(totalViews * 0.1)), engagement: '6%' },
+            ];
+        }
+
+        // Generate AI Insights via Amazon Bedrock
         let aiInsights = []
         try {
+            const videoContext = sortedVideos.slice(0, 10).map((v: any) => `"${v.title}" (Viral Score: ${v.viralScore || 50}/100)`).join(", ");
             const prompt = `You are a social media performance analyst for Postable. 
-Based on these metrics: ${totalViews} total views, ${totalSubscribers} subscribers/followers, across platforms: ${activePlatforms.join(", ")}.
-Generate exactly 4 hyper-specific, actionable insights for the user. 
-Format as JSON: [{"title": "Short Title", "insight": "1 sentence action", "score": "percentage string like 92%"}]
-Focus on viral potential, best post times, content gaps, and topic velocity.`
+Based on these overall metrics: ${totalViews} total views, ${totalSubscribers} subscribers/followers, across platforms: ${activePlatforms.join(", ")}.
+The user's top recent clips and their AI-evaluated viral potential scores are: ${videoContext || "None uploaded yet"}.
+Generate exactly 4 hyper-specific, actionable insights for the user. AT LEAST TWO insights MUST predict WHAT TRENDS ARE UPCOMING in their specific content niche.
+Format strictly as JSON: [{"title": "Short Title", "insight": "1 sentence action", "score": "percentage string like 92%"}]
+Focus on predicting upcoming trends, viral topic velocity, and actionable content gaps.`
 
             const response = await bedrockClient.send(new InvokeModelCommand({
                 modelId: process.env.BEDROCK_MODEL_ID || "amazon.nova-pro-v1:0",
@@ -175,10 +198,10 @@ Focus on viral potential, best post times, content gaps, and topic velocity.`
         } catch (e) {
             console.error("Bedrock AI Insights generation failed, using fallback:", e)
             aiInsights = [
-                { title: 'Viral Potential', insight: `High possibility for video to hit ${formatNumber(totalViews * 0.5)}+ views based on recent velocity.`, score: '92%' },
-                { title: 'Best Post Time', insight: 'Tuesday 6:00 PM EST is your peak engagement window.', score: '88%' },
-                { title: 'Content Gap', insight: 'Viewers are asking for more "behind-the-scenes" content.', score: '74%' },
-                { title: 'Topic Velocity', insight: '"AI Productivity" is trending 4x faster this week.', score: '96%' },
+                { title: 'Upcoming Trend Prediction', insight: `Based on "${topClips[0]?.title || 'recent uploads'}", viewers will soon want deeper technical deep-dives.`, score: '94%' },
+                { title: 'Emerging Format', insight: 'Carousel posts on LinkedIn and Instagram are showing a 3x higher retention trend over the last 48 hours.', score: '89%' },
+                { title: 'Predicted Topic Velocity', insight: 'The topic "AI Productivity" is accelerating and is predicted to peak next Tuesday.', score: '96%' },
+                { title: 'Content Gap Opportunity', insight: 'Short-form educational clips under 15 seconds are currently under-saturated in your niche.', score: '82%' },
             ]
         }
 

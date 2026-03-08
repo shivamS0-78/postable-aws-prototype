@@ -144,15 +144,12 @@ export async function POST(req: NextRequest) {
                         continue
                     }
 
-                    // Step 1: Get the exact Instagram Account ID linked to this OAuth user
-                    const meRes = await fetch(
-                        `https://graph.instagram.com/v22.0/me?fields=user_id&access_token=${accessToken}`
-                    )
-                    const meData = await meRes.json()
-                    const igUserId = meData.user_id
+                    // Step 1: Get the exact Instagram Account ID linked to this OAuth user from the stored connected account
+                    // We saved it in the refreshToken field during the OAuth callback
+                    const igUserId = account.refreshToken;
 
                     if (!igUserId) {
-                        results[platform] = { success: false, message: "Could not identify Instagram User ID from token." }
+                        results[platform] = { success: false, message: `Could not identify Instagram User ID. Please reconnect your Instagram account in Settings.` }
                         continue
                     }
 
