@@ -253,6 +253,15 @@ function SettingsContent() {
                 <div className="bg-card border-4 border-main rounded p-4 shadow-[4px_4px_0px_0px_var(--shadow-main)] text-center font-cabinet font-bold uppercase text-sm">
                     🏗️ Built on AWS: S3 (Storage) • DynamoDB (Database) • Bedrock/Claude (AI) • Transcribe (Speech-to-Text) • Lambda (Processing) • Amplify (Hosting)
                 </div>
+
+                {/* Logo Attribution */}
+                <div className="text-center text-xs text-gray-500 font-satoshi">
+                    <a href="https://www.flaticon.com/free-icons/youtube" title="youtube icons" target="_blank" rel="noopener noreferrer" className="hover:underline mx-1">Youtube icons by Freepik</a>
+                    <span className="mx-1">|</span>
+                    <a href="https://www.flaticon.com/free-icons/instagram-logo" title="instagram logo icons" target="_blank" rel="noopener noreferrer" className="hover:underline mx-1">Instagram logo icons by Freepik</a>
+                    <span className="mx-1">|</span>
+                    <a href="https://www.flaticon.com/free-icons/linkedin" title="linkedin icons" target="_blank" rel="noopener noreferrer" className="hover:underline mx-1">Linkedin icons by Freepik</a>
+                </div>
             </div>
         </div>
     )
