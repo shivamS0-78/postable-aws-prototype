@@ -21,6 +21,7 @@ interface Video {
   keyMoments: string
   transcript: string
   thumbnailUrl: string
+  videoUrl: string | null
 }
 
 const PLATFORMS = ["youtube", "instagram", "twitter", "linkedin"]
@@ -184,7 +185,7 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
     <div className="min-h-screen bg-page text-main font-satoshi selection:bg-[#ff6b6b] selection:text-white pb-32">
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-6 py-8">
+      <div className="max-w-[1640px] mx-auto px-6 py-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-4 border-main pb-4 mb-6">
           <div className="flex items-center gap-3">
             <span className="text-4xl">🎬</span>
@@ -207,16 +208,16 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
             🎉 Content approved and ready to be scheduled for posting across all selected platforms!
           </div>
         )}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 gap-6">
 
-          {/* Left Column */}
-          <div className="col-span-1 space-y-6">
+          {/* COLUMN 1: AI ANALYTICS (Viral Score & Suggestions) */}
+          <div className="col-span-1 space-y-6 lg:max-h-[calc(100vh-200px)] lg:overflow-y-auto pr-2 custom-scrollbar">
 
             {/* Viral Score */}
             <div className={`border-4 rounded shadow-[8px_8px_0px_0px_var(--shadow-main)] p-6 ${viralBg}`}>
               <p className="text-sm text-main font-cabinet font-black uppercase tracking-wider mb-2 border-b-2 border-main pb-2">AI Viral Score</p>
               <div className={`text-6xl font-cabinet font-black ${viralColor} drop-shadow-[2px_2px_0px_var(--shadow-main)]`}>{viralScore}</div>
-              <div className="text-main font-satoshi font-bold text-sm mb-4">OUT OF 100</div>
+              <div className="text-main font-satoshi font-bold text-sm mb-4 uppercase">Out of 100</div>
               <div className="w-full bg-page border-2 border-main rounded h-4 mb-4 shadow-inner overflow-hidden">
                 <div
                   className={`h-full border-r-2 border-main transition-all ${viralScore >= 70 ? "bg-[#b5e550]" : viralScore >= 40 ? "bg-[#ffe066]" : "bg-[#ff6b6b]"}`}
@@ -228,42 +229,7 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
               )}
             </div>
 
-            {/* Thumbnail */}
-            <div className="bg-card border-4 border-main rounded shadow-[8px_8px_0px_0px_var(--shadow-main)] overflow-hidden group">
-              <div className="aspect-video bg-page relative flex items-center justify-center border-b-4 border-main overflow-hidden">
-                {video.thumbnailUrl ? (
-                  <img src={`/api/thumbnails?key=${video.thumbnailUrl}`} alt="AI Generated Thumbnail" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                ) : (
-                  <div className="text-center p-6 space-y-2">
-                    <span className="text-4xl block">🖼️</span>
-                    <p className="text-xs font-cabinet font-black uppercase text-gray-400">Thumbnail Generating...</p>
-                  </div>
-                )}
-                <div className="absolute top-3 right-3">
-                  <span className="bg-[#b5e550] text-main border-2 border-main px-2 py-1 rounded text-[10px] font-cabinet font-black uppercase shadow-[2px_2px_0px_0px_var(--shadow-main)]">AI Generated</span>
-                </div>
-              </div>
-              <div className="p-4">
-                <button
-                  disabled={loading}
-                  onClick={async () => {
-                    setLoading(true);
-                    try {
-                      await axios.post(`/api/process/${video.id}/thumbnail`);
-                      window.location.reload();
-                    } catch (err) {
-                      console.error(err);
-                      setLoading(false);
-                    }
-                  }}
-                  className="w-full bg-[#4dabf7] text-white border-2 border-main py-2 rounded font-cabinet font-black uppercase text-xs shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:shadow-[4px_4px_0px_0px_var(--shadow-main)] hover:-translate-y-1 transition-all flex items-center justify-center gap-2"
-                >
-                  <span>✨ Regenerate AI Thumbnail</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Improvements */}
+            {/* AI Suggestions */}
             {improvements.length > 0 && (
               <div className="bg-card border-4 border-main rounded shadow-[4px_4px_0px_0px_var(--shadow-main)] p-5">
                 <p className="text-sm font-cabinet font-black uppercase tracking-wider mb-4 border-b-2 border-main pb-2">💡 AI Suggestions</p>
@@ -278,20 +244,6 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
               </div>
             )}
 
-            {/* Hashtags */}
-            {hashtagData.general && (
-              <div className="bg-card border-4 border-main rounded shadow-[4px_4px_0px_0px_var(--shadow-main)] p-5">
-                <p className="text-sm font-cabinet font-black uppercase tracking-wider mb-4 border-b-2 border-main pb-2">🏷️ Hashtags</p>
-                <div className="flex flex-wrap gap-2">
-                  {[...(hashtagData.general || []), ...(hashtagData.niche || [])].map((tag: string, i: number) => (
-                    <span key={i} className="text-xs bg-card border-2 border-main text-main font-cabinet font-bold shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_var(--shadow-main)] transition-all px-2 py-1 rounded cursor-default uppercase">
-                      #{tag.replace("#", "")}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {/* Key Moments */}
             {keyMoments.length > 0 && (
               <div className="bg-card border-4 border-main rounded shadow-[4px_4px_0px_0px_var(--shadow-main)] p-5">
@@ -301,7 +253,6 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
                     <li key={i} className="text-sm flex gap-3 pb-3 border-b-2 border-gray-100 last:border-0 last:pb-0 items-start">
                       <span className="text-white bg-black border-2 border-main rounded px-1.5 py-0.5 text-[10px] font-cabinet font-black shrink-0 shadow-[1px_1px_0px_0px_var(--shadow-main)]">{moment.timestamp}</span>
                       <span className="text-main font-satoshi font-medium">{moment.description}</span>
-                      {moment.clipWorthy && <span className="text-xl shrink-0 drop-shadow-[1px_1px_0px_var(--shadow-main)]" title="Clip Worthy">📎</span>}
                     </li>
                   ))}
                 </ul>
@@ -309,70 +260,137 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
             )}
           </div>
 
-          {/* Right Column — Platform Tabs */}
-          <div className="col-span-1 md:col-span-2 space-y-6">
+          {/* COLUMN 2: STUDIO PLAYER (Video & Transcript) */}
+          <div className="col-span-1 xl:col-span-2 space-y-6">
 
-            {/* Platform Tabs */}
-            <div className="flex gap-3 flex-wrap">
-              {PLATFORMS.map(platform => (
-                <button
-                  key={platform}
-                  onClick={() => setActiveTab(platform)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded text-sm font-cabinet font-black uppercase border-2 border-main transition-all shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:-translate-y-[1px] hover:-translate-x-[1px] hover:shadow-[3px_3px_0px_0px_var(--shadow-main)]
-                    ${activeTab === platform
-                      ? "bg-black text-white"
-                      : "bg-card text-main"
-                    }`}
-                >
-                  {PLATFORM_ICONS[platform].startsWith("/") ? (
-                    <img src={PLATFORM_ICONS[platform]} alt={platform} className="w-6 h-6 object-contain" />
-                  ) : (
-                    PLATFORM_ICONS[platform]
-                  )}
-                  <span className="capitalize">{platform === "twitter" ? "X" : platform}</span>
-                </button>
-              ))}
+            {/* Real Video Player */}
+            <div className="bg-black border-8 border-main rounded shadow-[12px_12px_0px_0px_var(--shadow-main)] overflow-hidden aspect-video relative group">
+              {video.videoUrl ? (
+                <video
+                  src={video.videoUrl}
+                  controls
+                  poster={video.thumbnailUrl ? `/api/thumbnails?key=${video.thumbnailUrl}` : undefined}
+                  className="w-full h-full object-contain"
+                />
+              ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center bg-gray-900 text-white p-8 text-center">
+                  <span className="text-6xl mb-4 animate-pulse">🎥</span>
+                  <p className="font-cabinet font-black uppercase text-xl">Video stream not available</p>
+                  <p className="text-gray-400 text-sm mt-2">Checking S3 storage...</p>
+                </div>
+              )}
             </div>
 
-            {/* Platform Content */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Thumbnail Mini-Card */}
+              <div className="bg-card border-4 border-main rounded shadow-[4px_4px_0px_0px_var(--shadow-main)] overflow-hidden">
+                <div className="p-3 border-b-4 border-main flex items-center justify-between bg-page">
+                  <p className="text-[10px] font-cabinet font-black uppercase tracking-wider text-main">AI Generated Thumbnail</p>
+                  <span className="bg-[#b5e550] text-[8px] font-cabinet font-black uppercase px-1.5 py-0.5 border border-main rounded">Ready</span>
+                </div>
+                <div className="aspect-video bg-page relative overflow-hidden">
+                  {video.thumbnailUrl ? (
+                    <img src={`/api/thumbnails?key=${video.thumbnailUrl}`} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-2xl opacity-20">🖼️</div>
+                  )}
+                </div>
+                <div className="p-3">
+                  <button
+                    onClick={async () => {
+                      setLoading(true);
+                      try {
+                        await axios.post(`/api/process/${video.id}/thumbnail`);
+                        window.location.reload();
+                      } catch (err) { setLoading(false); }
+                    }}
+                    className="w-full bg-[#4dabf7] text-white border-2 border-main py-1.5 rounded font-cabinet font-black uppercase text-[10px] shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:shadow-[4px_4px_0px_0px_var(--shadow-main)] transition-all"
+                  >
+                    ✨ Regenerate AI Thumbnail
+                  </button>
+                </div>
+              </div>
+
+              {/* Hashtag List */}
+              <div className="bg-card border-4 border-main rounded shadow-[4px_4px_0px_0px_var(--shadow-main)] p-4">
+                <p className="text-[10px] font-cabinet font-black uppercase tracking-wider mb-3 border-b-2 border-main pb-1">🏷️ Recommended Hashtags</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {[...(hashtagData.general || []), ...(hashtagData.niche || [])].map((tag: string, i: number) => (
+                    <span key={i} className="text-[10px] bg-white border border-main text-main font-bold px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_var(--shadow-main)] uppercase">
+                      #{tag.replace("#", "")}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Transcript Panel */}
+            <div className="bg-card border-4 border-main rounded shadow-[4px_4px_0px_0px_var(--shadow-main)]">
+              <div className="p-3 border-b-4 border-main flex items-center gap-2 bg-page">
+                <span className="text-xl">📝</span>
+                <p className="text-sm font-cabinet font-black uppercase tracking-wider text-main">Full Transcription</p>
+              </div>
+              <div className="p-4 max-h-[200px] overflow-y-auto text-sm font-satoshi leading-relaxed font-medium bg-white custom-scrollbar italic text-gray-600">
+                "{video.transcript || "No transcript available for this video."}"
+              </div>
+            </div>
+          </div>
+
+          {/* COLUMN 3: METADATA EDITOR */}
+          <div className="col-span-1 space-y-6">
+
+            {/* Platform Selection */}
+            <div className="bg-card border-4 border-main rounded shadow-[4px_4px_0px_0px_var(--shadow-main)] p-3">
+              <p className="text-[10px] font-cabinet font-black uppercase tracking-wider mb-3 text-center border-b-2 border-main pb-1">Switch Platform</p>
+              <div className="grid grid-cols-4 gap-2">
+                {PLATFORMS.map(platform => (
+                  <button
+                    key={platform}
+                    onClick={() => setActiveTab(platform)}
+                    title={platform}
+                    className={`flex items-center justify-center p-2 rounded border-2 border-main transition-all shadow-[1px_1px_0px_0px_var(--shadow-main)]
+                      ${activeTab === platform ? "bg-black" : "bg-white hover:bg-gray-50"}`}
+                  >
+                    <img
+                      src={PLATFORM_ICONS[platform].startsWith("/") ? PLATFORM_ICONS[platform] : undefined}
+                      className={`w-6 h-6 object-contain ${activeTab === platform ? "invert" : ""}`}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Editor Content */}
             {PLATFORMS.map(platform => {
               const content = getPlatformContent(platform)
               if (platform !== activeTab) return null
 
               return (
-                <div key={platform} className={`border-4 border-main shadow-[8px_8px_0px_0px_var(--shadow-main)] rounded p-6 space-y-6 ${PLATFORM_COLORS[platform] || "bg-card"}`}>
-                  <div className="flex items-center gap-3 pb-4 border-b-4 border-main">
-                    <span className="text-3xl bg-card border-2 border-main rounded flex items-center justify-center w-12 h-12 shadow-[2px_2px_0px_0px_var(--shadow-main)]">
-                      {PLATFORM_ICONS[platform].startsWith("/") ? (
-                        <img src={PLATFORM_ICONS[platform]} alt={platform} className="w-12 h-12 object-contain" />
-                      ) : (
-                        PLATFORM_ICONS[platform]
-                      )}
-                    </span>
-                    <h3 className="font-cabinet font-black uppercase text-xl text-main">
-                      {platform === "twitter" ? "X (Twitter)" : platform}
+                <div key={platform} className={`border-4 border-main shadow-[8px_8px_0px_0px_var(--shadow-main)] rounded p-5 space-y-5 lg:h-[calc(100vh-320px)] lg:overflow-y-auto custom-scrollbar ${PLATFORM_COLORS[platform] || "bg-card"}`}>
+                  <div className="flex items-center gap-2 pb-3 border-b-2 border-main">
+                    <h3 className="font-cabinet font-black uppercase text-lg text-main">
+                      {platform === "twitter" ? "X / Twitter" : platform} Edit
                     </h3>
-                    <span className="text-[10px] font-cabinet font-bold text-main uppercase ml-auto bg-card border-2 border-main px-2 py-1 rounded shadow-[2px_2px_0px_0px_var(--shadow-main)]">✏️ Click to edit</span>
                   </div>
 
                   {platform === "youtube" && content && (
                     <>
                       <div>
-                        <label className="text-sm font-cabinet font-black text-main uppercase mb-2 block">Title</label>
+                        <label className="text-[10px] font-cabinet font-black text-main uppercase mb-1 block">SEO Title</label>
                         <textarea
                           value={getEditableContent(platform, "title")}
                           onChange={e => setEditable(platform, "title", e.target.value)}
-                          className="w-full bg-page border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
+                          className="w-full bg-white border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none shadow-inner"
                           rows={2}
                         />
                       </div>
                       <div>
-                        <label className="text-sm font-cabinet font-black text-main uppercase mb-2 block">Description</label>
+                        <label className="text-[10px] font-cabinet font-black text-main uppercase mb-1 block">Description</label>
                         <textarea
                           value={getEditableContent(platform, "description")}
                           onChange={e => setEditable(platform, "description", e.target.value)}
-                          className="w-full bg-page border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
-                          rows={6}
+                          className="w-full bg-white border-2 border-main rounded p-3 text-main font-satoshi font-bold text-xs resize-none focus:outline-none shadow-inner"
+                          rows={12}
                         />
                       </div>
                     </>
@@ -381,21 +399,21 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
                   {platform === "instagram" && content && (
                     <>
                       <div>
-                        <label className="text-sm font-cabinet font-black text-main uppercase mb-2 block">Caption</label>
+                        <label className="text-[10px] font-cabinet font-black text-main uppercase mb-1 block">Post Caption</label>
                         <textarea
                           value={getEditableContent(platform, "caption")}
                           onChange={e => setEditable(platform, "caption", e.target.value)}
-                          className="w-full bg-page border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
-                          rows={5}
+                          className="w-full bg-white border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none shadow-inner"
+                          rows={10}
                         />
                       </div>
                       <div>
-                        <label className="text-sm font-cabinet font-black text-main uppercase mb-2 block">Reels Caption</label>
+                        <label className="text-[10px] font-cabinet font-black text-main uppercase mb-1 block">Reels Overlay/Caption</label>
                         <textarea
                           value={getEditableContent(platform, "reels_caption")}
                           onChange={e => setEditable(platform, "reels_caption", e.target.value)}
-                          className="w-full bg-page border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
-                          rows={2}
+                          className="w-full bg-white border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none shadow-inner"
+                          rows={3}
                         />
                       </div>
                     </>
@@ -403,14 +421,14 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
 
                   {platform === "twitter" && content && (
                     <div>
-                      <label className="text-sm font-cabinet font-black text-main uppercase mb-2 block">Tweet</label>
+                      <label className="text-[10px] font-cabinet font-black text-main uppercase mb-1 block">Tweet Body</label>
                       <textarea
                         value={getEditableContent(platform, "tweet")}
                         onChange={e => setEditable(platform, "tweet", e.target.value)}
-                        className="w-full bg-page border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
-                        rows={3}
+                        className="w-full bg-white border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none shadow-inner"
+                        rows={6}
                       />
-                      <div className="text-xs font-cabinet font-black text-main uppercase text-right mt-2">
+                      <div className="text-[10px] font-cabinet font-black text-main uppercase text-right mt-1">
                         {getEditableContent(platform, "tweet").length}/280
                       </div>
                     </div>
@@ -418,19 +436,19 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
 
                   {platform === "linkedin" && content && (
                     <div>
-                      <label className="text-sm font-cabinet font-black text-main uppercase mb-2 block">Post</label>
+                      <label className="text-[10px] font-cabinet font-black text-main uppercase mb-1 block">Article Post</label>
                       <textarea
                         value={getEditableContent(platform, "post")}
                         onChange={e => setEditable(platform, "post", e.target.value)}
-                        className="w-full bg-page border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none focus:-translate-y-[1px] focus:-translate-x-[1px] focus:shadow-[2px_2px_0px_0px_var(--shadow-main)] transition-all shadow-inner"
-                        rows={7}
+                        className="w-full bg-white border-2 border-main rounded p-3 text-main font-satoshi font-bold text-sm resize-none focus:outline-none shadow-inner"
+                        rows={14}
                       />
                     </div>
                   )}
 
                   {!content && (
-                    <div className="text-center py-12 bg-page border-4 border-main border-dashed rounded text-main font-cabinet font-black uppercase shadow-inner">
-                      <p>Content not available. Try reprocessing.</p>
+                    <div className="text-center py-12 bg-white border-4 border-main border-dashed rounded text-main font-cabinet font-black uppercase italic">
+                      <p>AI Generation Error</p>
                     </div>
                   )}
                 </div>
@@ -439,6 +457,6 @@ export default function VideoPage({ params }: { params: Promise<{ id: string }> 
           </div>
         </div>
       </div>
-    </div >
+    </div>
   )
 }
