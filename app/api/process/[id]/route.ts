@@ -58,34 +58,42 @@ async function callNova(prompt: string): Promise<string> {
 // Helper: call Titan or Nova Canvas on Bedrock for image generation
 async function generateThumbnail(prompt: string): Promise<Buffer> {
   const modelId = process.env.BEDROCK_IMAGE_MODEL || "amazon.nova-canvas-v1:0"
-  console.log(`Generating thumbnail with model: ${modelId}`)
+  console.log(`[MainProcess] Invoking model: ${modelId}`)
 
-  const response = await bedrockClient.send(new InvokeModelCommand({
-    modelId,
-    contentType: "application/json",
-    accept: "application/json",
-    body: JSON.stringify({
-      taskType: "TEXT_IMAGE",
-      textToImageParams: {
-        text: prompt.trim(),
-      },
-      imageGenerationConfig: {
-        numberOfImages: 1,
-        quality: "premium",
-        height: 720,
-        width: 1280,
-        cfgScale: 8.0,
-        seed: Math.floor(Math.random() * 100000)
-      }
-    })
-  }))
-
-  const result = JSON.parse(Buffer.from(response.body).toString())
-  if (!result.images || result.images.length === 0) {
-    throw new Error("No images returned from Bedrock")
+  const requestBody = {
+    taskType: "TEXT_IMAGE",
+    textToImageParams: {
+      text: prompt.trim(),
+    },
+    imageGenerationConfig: {
+      numberOfImages: 1,
+      quality: "premium",
+      height: 720,
+      width: 1280,
+      cfgScale: 8.0,
+      seed: Math.floor(Math.random() * 100000)
+    }
   }
-  const base64Image = result.images[0]
-  return Buffer.from(base64Image, 'base64')
+
+  try {
+    const response = await bedrockClient.send(new InvokeModelCommand({
+      modelId,
+      contentType: "application/json",
+      accept: "application/json",
+      body: JSON.stringify(requestBody)
+    }))
+
+    const result = JSON.parse(Buffer.from(response.body).toString())
+    if (!result.images || result.images.length === 0) {
+      console.error("[MainProcess] Bedrock returned no images. Result:", result)
+      throw new Error("No images returned from Bedrock")
+    }
+    const base64Image = result.images[0]
+    return Buffer.from(base64Image, 'base64')
+  } catch (err: any) {
+    console.error("[MainProcess] Bedrock InvokeModel CRITICAL ERROR:", err)
+    throw err
+  }
 }
 
 export async function POST(
@@ -218,11 +226,10 @@ Generate optimized content for each platform. Return ONLY a valid JSON object wi
         ContentType: "image/png"
       }))
 
-      // We'll use a presigned URL format or a regional public URL
       thumbnailUrl = thumbKey
       await updateVideo(userId, videoId, { thumbnailUrl })
     } catch (thumbErr) {
-      console.error("Thumbnail generation failed:", thumbErr)
+      console.error("[MainProcess] Thumbnail generation failed:", thumbErr)
     }
 
     return NextResponse.json({
@@ -232,11 +239,7 @@ Generate optimized content for each platform. Return ONLY a valid JSON object wi
     })
 
   } catch (error: any) {
-    console.error("Processing error:", error)
-
-    // We try to update error status on a best-effort basis if we've successfully got the session earlier.
-    // However, if we're hitting the catch block, we don't have scope of `userId` readily if it failed before instantiation. 
-    // We will do a generic fail log here.
+    console.error("[MainProcess] Processing error:", error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }
