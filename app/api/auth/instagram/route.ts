@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 
-export async function GET() {
+export async function GET(req: NextRequest) {
     const clientId = process.env.INSTAGRAM_CLIENT_ID
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, "") || "http://localhost:3000"
+    const baseUrl = req.nextUrl.origin
     const redirectUri = `${baseUrl}/api/auth/instagram/callback`
 
     if (!clientId) {

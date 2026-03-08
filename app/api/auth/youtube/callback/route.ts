@@ -12,9 +12,11 @@ export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams
     const code = searchParams.get("code")
     const error = req.nextUrl.searchParams.get("error")
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
+    const baseUrl = req.nextUrl.origin
+    console.log("[YouTube OAuth] Callback received. BaseURL:", baseUrl, "Code present:", !!code)
 
     if (error || !code) {
+        console.error("[YouTube OAuth] Google returned error or no code:", error)
         return NextResponse.redirect(`${baseUrl}/settings?error=youtube_denied`)
     }
 
@@ -35,7 +37,7 @@ export async function GET(req: NextRequest) {
         const tokens = await tokenRes.json()
 
         if (!tokenRes.ok) {
-            console.error("YouTube token exchange failed:", tokens)
+            console.error("[YouTube OAuth] Token exchange failed. Status:", tokenRes.status, "Tokens:", tokens)
             return NextResponse.redirect(`${baseUrl}/settings?error=youtube_token_failed`)
         }
 
@@ -68,7 +70,7 @@ export async function GET(req: NextRequest) {
 
         return NextResponse.redirect(`${baseUrl}/settings?connected=youtube`)
     } catch (err: any) {
-        console.error("YouTube OAuth callback error:", err)
+        console.error("[YouTube OAuth] CRITICAL FALLBACK ERROR:", err)
         return NextResponse.redirect(`${baseUrl}/settings?error=youtube_failed`)
     }
 }

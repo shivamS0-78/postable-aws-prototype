@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 
-export async function GET() {
+export async function GET(req: NextRequest) {
     const clientId = process.env.LINKEDIN_CLIENT_ID
-    const redirectUri = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/linkedin/callback`
+    const origin = req.nextUrl.origin
+    const redirectUri = `${origin}/api/auth/linkedin/callback`
 
     if (!clientId) {
         return NextResponse.json({ error: "LinkedIn OAuth not configured" }, { status: 500 })
