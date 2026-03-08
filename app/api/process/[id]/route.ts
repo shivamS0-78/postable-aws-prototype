@@ -138,7 +138,7 @@ A creator has uploaded a video titled: "${video.title}"
 Video transcript:
 "${transcript.slice(0, 3000)}"
 
-Generate optimized content for each platform. Return ONLY a valid JSON object with this exact structure:
+Generate optimized content for each platform. CRITICAL: Analyze the transcript carefully and provide REAL, VARIED scores based on actual content quality. Do NOT use default values. Return ONLY a valid JSON object with this exact structure:
 
 {
   "youtube": {
@@ -163,9 +163,9 @@ Generate optimized content for each platform. Return ONLY a valid JSON object wi
     "trending": ["trend1", "trend2", "trend3"]
   },
   "viralScore": {
-    "score": 75,
-    "reasoning": "2-3 sentences explaining why this content will or won't perform well",
-    "improvements": ["improvement tip 1", "improvement tip 2", "improvement tip 3"]
+    "score": 0,
+    "reasoning": "Analyze the content's viral potential based on: hook strength, emotional impact, value/profit, uniqueness, and shareability. Score between 1-100.",
+    "improvements": ["Identify the weakest element and suggest a specific improvement", "Add a stronger hook", "Increase emotional appeal or value"]
   },
   "keyMoments": [
     {"timestamp": "0:30", "description": "key moment description", "clipWorthy": true},

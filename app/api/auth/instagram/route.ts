@@ -10,12 +10,18 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: "Instagram OAuth not configured" }, { status: 500 })
     }
 
-    // Using Instagram User Access Token flow (does not require a linked Facebook Page)
-    const authUrl = new URL("https://api.instagram.com/oauth/authorize");
-    authUrl.searchParams.set("client_id", process.env.INSTAGRAM_CLIENT_ID!);
-    authUrl.searchParams.set("redirect_uri", `${baseUrl}/api/auth/instagram/callback`);
+    // Use Facebook Login Dialog for Instagram Graph API
+    const authUrl = new URL("https://www.facebook.com/v22.0/dialog/oauth");
+    authUrl.searchParams.set("client_id", clientId);
+    authUrl.searchParams.set("redirect_uri", redirectUri);
     authUrl.searchParams.set("response_type", "code");
-    authUrl.searchParams.set("scope", "instagram_business_basic,instagram_business_content_publish");
+    authUrl.searchParams.set("scope", [
+        "instagram_basic",
+        "instagram_content_publish",
+        "pages_read_engagement",
+        "pages_show_list",
+        "public_profile"
+    ].join(","));
 
     return NextResponse.redirect(authUrl.toString())
 }

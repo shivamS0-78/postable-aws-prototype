@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { getVideo, deleteVideo } from "@/lib/dynamo"
 import { getUserSession } from "@/lib/auth"
 import { s3Client } from "@/lib/aws"
-import { DeleteObjectCommand } from "@aws-sdk/client-s3"
+import { DeleteObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3"
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 
 const BUCKET = process.env.S3_BUCKET_NAME || "postly-videos-123"
 
@@ -21,7 +22,27 @@ export async function GET(
     if (!video) {
       return NextResponse.json({ error: "Video not found" }, { status: 404 })
     }
-    return NextResponse.json({ video })
+
+    // Generate a signed URL for the video if it has an s3Key
+    let videoUrl = null
+    if (video.s3Key) {
+      try {
+        const command = new GetObjectCommand({
+          Bucket: BUCKET,
+          Key: video.s3Key,
+        })
+        videoUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 }) // Valid for 1 hour
+      } catch (e) {
+        console.error("Error generating signed URL:", e)
+      }
+    }
+
+    return NextResponse.json({
+      video: {
+        ...video,
+        videoUrl
+      }
+    })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
