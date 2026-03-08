@@ -92,7 +92,7 @@ export default function TrendsPage() {
                       }`}
                   >
                     {LOGO_MAP[p] ? (
-                      <img src={LOGO_MAP[p]} alt={p} className="w-4 h-4 object-contain" />
+                      <img src={LOGO_MAP[p]} alt={p} className="w-6 h-6 object-contain" />
                     ) : null}
                     {p} {isSelected && "✓"}
                   </button>
@@ -138,7 +138,7 @@ export default function TrendsPage() {
                       <h3 className="font-cabinet font-black uppercase text-xl text-main mb-1">{trend.topic}</h3>
                       <div className="flex items-center gap-2">
                         {LOGO_MAP[trend.platform] && (
-                          <img src={LOGO_MAP[trend.platform]} alt={trend.platform} className="w-4 h-4 object-contain" />
+                          <img src={LOGO_MAP[trend.platform]} alt={trend.platform} className="w-6 h-6 object-contain" />
                         )}
                         <span className="text-xs font-satoshi font-bold text-gray-500 uppercase tracking-widest bg-page border-2 border-main px-2 py-0.5 rounded shadow-inner">{trend.platform}</span>
                       </div>

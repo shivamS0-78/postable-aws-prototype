@@ -32,7 +32,7 @@ const platformConfigs: PlatformConfig[] = [
         borderColor: "border-red-500",
         bgColor: "bg-red-500/10",
         description: "Upload and publish videos directly to your YouTube channel",
-        logoSize: "w-12 h-12"
+        logoSize: "w-14 h-14"
     },
     {
         id: "instagram",
@@ -43,7 +43,7 @@ const platformConfigs: PlatformConfig[] = [
         borderColor: "border-pink-500",
         bgColor: "bg-pink-500/10",
         description: "Share Reels and short clips to your Instagram account",
-        logoSize: "w-14 h-14"
+        logoSize: "w-16 h-16"
     },
     {
         id: "linkedin",
@@ -54,7 +54,7 @@ const platformConfigs: PlatformConfig[] = [
         borderColor: "border-blue-500",
         bgColor: "bg-blue-500/10",
         description: "Post professional video content to your LinkedIn profile",
-        logoSize: "w-14 h-14"
+        logoSize: "w-16 h-16"
     },
 ]
 
@@ -179,7 +179,7 @@ function SettingsContent() {
                                         <div className="flex items-center gap-6">
                                             {/* Platform Icon */}
                                             <div
-                                                className={`w-16 h-16 border-2 border-main rounded shadow-[2px_2px_0px_0px_var(--shadow-main)] flex items-center justify-center text-3xl ${connected ? config.bgColor : "bg-card"
+                                                className={`w-20 h-20 border-2 border-main rounded shadow-[2px_2px_0px_0px_var(--shadow-main)] flex items-center justify-center text-3xl ${connected ? config.bgColor : "bg-card"
                                                     }`}
                                             >
                                                 {config.icon.startsWith("/") ? (

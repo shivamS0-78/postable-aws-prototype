@@ -5,7 +5,7 @@ import {
 } from 'recharts'
 import {
     TrendingUp, Users, Eye, MousePointer2, Download,
-    ArrowUpRight, ArrowDownRight, Zap, Shield, ZapOff, Loader2
+    ArrowUpRight, ArrowDownRight, Zap, Shield, ZapOff, Loader2, RefreshCw
 } from 'lucide-react'
 
 const StatCard = ({ title, value, change, icon: Icon, color, isLoading }: any) => (
@@ -33,24 +33,27 @@ const StatCard = ({ title, value, change, icon: Icon, color, isLoading }: any) =
 export default function AnalyticsPage() {
     const [activePlatform, setActivePlatform] = useState('All')
     const [isExporting, setIsExporting] = useState(false)
+    const [showAllClips, setShowAllClips] = useState(false)
 
     const [data, setData] = useState<any>(null)
     const [isLoading, setIsLoading] = useState(true)
 
-    useEffect(() => {
-        async function fetchAnalytics() {
-            try {
-                const res = await fetch('/api/analytics')
-                if (res.ok) {
-                    const result = await res.json()
-                    setData(result)
-                }
-            } catch (err) {
-                console.error("Failed to fetch analytics:", err)
-            } finally {
-                setIsLoading(false)
+    const fetchAnalytics = async () => {
+        setIsLoading(true)
+        try {
+            const res = await fetch('/api/analytics')
+            if (res.ok) {
+                const result = await res.json()
+                setData(result)
             }
+        } catch (err) {
+            console.error("Failed to fetch analytics:", err)
+        } finally {
+            setIsLoading(false)
         }
+    }
+
+    useEffect(() => {
         fetchAnalytics()
     }, [])
 
@@ -66,6 +69,21 @@ export default function AnalyticsPage() {
     const topClips = data?.topClips || []
     const aiInsights = data?.aiInsights || []
     const activePlatforms = data?.activePlatforms || ['YouTube', 'Instagram', 'LinkedIn']
+
+    // Filter the performance data based on the selected platform split
+    const filteredPerformanceData = performanceData.map((day: any) => {
+        if (activePlatform === 'All') return day
+
+        // Find the percentage of traffic this platform is responsible for
+        const platformStat = platformData.find((p: any) => p.name.toLowerCase() === activePlatform.toLowerCase())
+        const percentage = platformStat ? platformStat.value / 100 : 0
+
+        return {
+            ...day,
+            views: Math.floor(day.views * percentage),
+            engagement: Math.floor(day.engagement * percentage)
+        }
+    })
 
     return (
         <div className="min-h-screen bg-page p-6 md:p-10 space-y-10 selection:bg-[#ff6b6b] selection:text-white pb-20">
@@ -120,7 +138,7 @@ export default function AnalyticsPage() {
                             <p className="text-sm text-gray-500 font-medium">Daily performance metrics across active platforms</p>
                         </div>
                         <div className="flex bg-page border-2 border-main rounded p-1 p-1">
-                            {['All', ...activePlatforms].map((p) => (
+                            {['All', ...activePlatforms].map((p: string) => (
                                 <button
                                     key={p}
                                     onClick={() => setActivePlatform(p)}
@@ -140,7 +158,7 @@ export default function AnalyticsPage() {
                             </div>
                         ) : (
                             <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart data={performanceData}>
+                                <AreaChart data={filteredPerformanceData}>
                                     <defs>
                                         <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
                                             <stop offset="5%" stopColor="#b5e550" stopOpacity={0.8} />
@@ -248,7 +266,7 @@ export default function AnalyticsPage() {
                             ) : aiInsights.map((item: any, idx: number) => (
                                 <div key={idx} className="bg-page border-2 border-main p-4 rounded hover:bg-[#b5e550]/10 transition-all cursor-default text-main">
                                     <div className="flex justify-between items-center mb-2">
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-[#b5e550]">{item.title}</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-[#4d7c0f]">{item.title}</span>
                                         <span className="text-lg font-black font-cabinet">{item.score}</span>
                                     </div>
                                     <p className="text-xs font-medium leading-relaxed opacity-90">{item.insight}</p>
@@ -256,8 +274,13 @@ export default function AnalyticsPage() {
                             ))}
                         </div>
 
-                        <button disabled={isLoading} className="w-full bg-[#b5e550] text-black border-2 border-main py-3 rounded font-cabinet font-black uppercase tracking-widest text-sm shadow-[4px_4px_0px_0px_#000] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[1px_1px_0px_0px_#000] transition-all disabled:opacity-50">
-                            {isLoading ? "Generating with Amazon Nova..." : "Generate Deep Insights Report"}
+                        <button
+                            onClick={fetchAnalytics}
+                            disabled={isLoading}
+                            className="w-full flex items-center justify-center gap-2 bg-[#b5e550] text-black border-2 border-main py-3 rounded font-cabinet font-black uppercase tracking-widest text-sm shadow-[4px_4px_0px_0px_#000] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[1px_1px_0px_0px_#000] transition-all disabled:opacity-50"
+                        >
+                            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+                            {isLoading ? "Generating with Amazon Nova..." : "Refresh AI Predictions"}
                         </button>
                     </div>
                 </div>
@@ -270,7 +293,7 @@ export default function AnalyticsPage() {
                             [1, 2, 3, 4].map(i => (
                                 <div key={i} className="animate-pulse h-16 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded w-full"></div>
                             ))
-                        ) : topClips.map((clip: any, idx: number) => (
+                        ) : topClips.slice(0, showAllClips ? undefined : 4).map((clip: any, idx: number) => (
                             <div key={idx} className="group border-2 border-main p-4 rounded shadow-[2px_2px_0px_0px_var(--shadow-main)] hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--shadow-main)] transition-all flex items-center justify-between">
                                 <div className="flex items-center gap-4">
                                     <div className="w-10 h-10 bg-page border-2 border-main rounded flex items-center justify-center font-black italic">{idx + 1}</div>
@@ -289,9 +312,15 @@ export default function AnalyticsPage() {
                             </div>
                         ))}
                     </div>
-                    <button disabled={isLoading} className="w-full mt-6 border-2 border-main border-dashed py-3 rounded font-cabinet font-bold uppercase text-xs hover:bg-gray-100 transition-all disabled:opacity-50">
-                        View All Performance Data
-                    </button>
+                    {topClips.length > 4 && (
+                        <button
+                            disabled={isLoading}
+                            onClick={() => setShowAllClips(!showAllClips)}
+                            className="w-full mt-6 border-2 border-main border-dashed py-3 rounded font-cabinet font-bold uppercase text-xs hover:bg-gray-100 transition-all disabled:opacity-50"
+                        >
+                            {showAllClips ? "View Less Data" : "View All Performance Data"}
+                        </button>
+                    )}
                 </div>
             </div>
         </div>

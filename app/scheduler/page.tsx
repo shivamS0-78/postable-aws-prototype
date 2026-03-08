@@ -491,7 +491,7 @@ export default function SchedulerPage() {
                             {item.platforms?.map(p => (
                                 <span key={p} className={`text-[10px]`} title={PLATFORM_CONFIG[p]?.label}>
                                     {PLATFORM_CONFIG[p]?.icon.startsWith("/") ? (
-                                        <img src={PLATFORM_CONFIG[p]?.icon} alt={PLATFORM_CONFIG[p]?.label} className="w-3 h-3 object-contain inline-block" />
+                                        <img src={PLATFORM_CONFIG[p]?.icon} alt={PLATFORM_CONFIG[p]?.label} className="w-5 h-5 object-contain inline-block" />
                                     ) : (
                                         PLATFORM_CONFIG[p]?.icon || p
                                     )}
@@ -661,7 +661,7 @@ export default function SchedulerPage() {
                                                 connectedAccounts.map(a => (
                                                     <span key={a.platform} className={`text-[10px] px-2 py-1 uppercase font-cabinet font-bold rounded border-2 border-main shadow-[1px_1px_0px_0px_var(--shadow-main)] bg-card text-main flex items-center gap-1`}>
                                                         {PLATFORM_CONFIG[a.platform]?.icon.startsWith("/") ? (
-                                                            <img src={PLATFORM_CONFIG[a.platform]?.icon} alt={a.platform} className="w-3 h-3 object-contain" />
+                                                            <img src={PLATFORM_CONFIG[a.platform]?.icon} alt={a.platform} className="w-5 h-5 object-contain" />
                                                         ) : (
                                                             PLATFORM_CONFIG[a.platform]?.icon
                                                         )} {a.username}
@@ -756,9 +756,9 @@ export default function SchedulerPage() {
                                                         : "bg-gray-800/40 border-gray-700 hover:border-gray-600"
                                                         }`}
                                                 >
-                                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm ${selected ? cfg?.bg || "bg-gray-700" : "bg-gray-700/50"}`}>
+                                                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm ${selected ? cfg?.bg || "bg-gray-700" : "bg-gray-700/50"}`}>
                                                         {cfg?.icon.startsWith("/") ? (
-                                                            <img src={cfg.icon} alt={cfg.label} className="w-5 h-5 object-contain" />
+                                                            <img src={cfg.icon} alt={cfg.label} className="w-8 h-8 object-contain" />
                                                         ) : (
                                                             cfg?.icon || "📱"
                                                         )}
