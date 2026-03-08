@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(req: NextRequest) {
     const clientId = process.env.INSTAGRAM_CLIENT_ID
-    const baseUrl = req.nextUrl.origin
+    const baseUrl = "https://postable-aws-prototype-zeta.vercel.app"
     const redirectUri = `${baseUrl}/api/auth/instagram/callback`
+    console.log("[Instagram OAuth] Redirecting to Meta. URI:", redirectUri)
 
     if (!clientId) {
         return NextResponse.json({ error: "Instagram OAuth not configured" }, { status: 500 })

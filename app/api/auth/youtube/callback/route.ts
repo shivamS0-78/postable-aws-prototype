@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams
     const code = searchParams.get("code")
     const error = req.nextUrl.searchParams.get("error")
-    const baseUrl = req.nextUrl.origin
+    const baseUrl = "https://postable-aws-prototype-zeta.vercel.app"
     console.log("[YouTube OAuth] Callback received. BaseURL:", baseUrl, "Code present:", !!code)
 
     if (error || !code) {

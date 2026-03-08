@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(req: NextRequest) {
     const clientId = process.env.LINKEDIN_CLIENT_ID
-    const origin = req.nextUrl.origin
-    const redirectUri = `${origin}/api/auth/linkedin/callback`
+    const baseUrl = "https://postable-aws-prototype-zeta.vercel.app"
+    const redirectUri = `${baseUrl}/api/auth/linkedin/callback`
+    console.log("[LinkedIn OAuth] Redirecting to LinkedIn. URI:", redirectUri)
 
     if (!clientId) {
         return NextResponse.json({ error: "LinkedIn OAuth not configured" }, { status: 500 })
