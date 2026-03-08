@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams
     const code = searchParams.get("code")
     const error = searchParams.get("error")
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, "") || "http://localhost:3000"
+    const baseUrl = "https://postable-aws-prototype-zeta.vercel.app"
 
     if (error || !code) {
         return NextResponse.redirect(`${baseUrl}/settings?error=instagram_denied`)

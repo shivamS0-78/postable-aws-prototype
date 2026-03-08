@@ -1,8 +1,10 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 
-export async function GET() {
+export async function GET(req: NextRequest) {
     const clientId = process.env.GOOGLE_CLIENT_ID
-    const redirectUri = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/youtube/callback`
+    const baseUrl = "https://postable-aws-prototype-zeta.vercel.app"
+    const redirectUri = `${baseUrl}/api/auth/youtube/callback`
+    console.log("[YouTube OAuth] Redirecting to Google. URI:", redirectUri)
 
     if (!clientId) {
         return NextResponse.json({ error: "Google OAuth not configured" }, { status: 500 })
