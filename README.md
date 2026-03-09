@@ -68,7 +68,7 @@ postable-aws-prototype/
 ### 1 — Clone
 
 ```bash
-git clone https://github.com/prayas-bit/postable-aws-prototype.git
+git clone https://github.com/shivamS0-78/postable-aws-prototype.git
 cd postable-aws-prototype
 ```
 
